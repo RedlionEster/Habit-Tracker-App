@@ -1,0 +1,33 @@
+# My Habit Tracker App Project
+
+The Habit Tracker App is my Python App for tracking activities.
+
+
+## What is it?
+
+Introducing a simple app designed to track your habits.
+Create, delete, and monitor your habits with ease.
+Analyze your participation to see how well you're sticking to your habits.
+
+
+## Installation
+
+```shell
+pip install -r requirements.txt
+```
+## Usage
+
+Start
+
+```shell
+python main.py
+```
+
+and follow instructions on screen.
+
+## Tests
+
+```shell
+pytest .
+```
+
