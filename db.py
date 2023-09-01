@@ -13,22 +13,21 @@ def create_tables(db):
 
     cur.execute("""CREATE TABLE IF NOT EXISTS counter (
         name TEXT PRIMARY KEY,
-        description TEXT)""")
-
-    #add periodicity
+        description TEXT,
+        periodicity TEXT)""")
 
     cur.execute("""CREATE TABLE IF NOT EXISTS tracker (
         date TEXT,
         counterName TEXT,
         FOREIGN KEY (counterName) REFERENCES counter(name))""")
 
-
     db.commit()
 
 
-def add_counter(db, name, description):
+# creates a cursor
+def add_counter(db, name, description, periodicity):
     cur = db.cursor()
-    cur.execute("INSERT INTO counter VALUES (?, ?)", (name, description))
+    cur.execute("INSERT INTO counter VALUES (?, ?, ?)", (name, description, periodicity))
     db.commit()
 
 
@@ -40,10 +39,23 @@ def increment_counter(db, name, event_date=None):
     db.commit()
 
 
+# what if the name doesn't exist in the database? does the user get an error?
 def get_counter_data(db, name):
     cur = db.cursor()
     cur.execute("SELECT * FROM tracker WHERE counterName=?", (name,))
     return cur.fetchall()
+
+# continue here with this function for periodicity
+
+
+def habit_by_periodicity(db, periodicity):
+    cur = db.cursor()
+    cur.execute("select name from counter Where periodicity=?", (periodicity,))
+    counters = cur.fetchall()
+    counter_list = []
+    for counter in counters:
+        counter_list.append(counter[0])
+    return counter_list
 
 
 def delete_counter(db, name):
@@ -51,6 +63,3 @@ def delete_counter(db, name):
     cur.execute("DELETE from tracker WHERE counterName=?", (name,))
     cur.execute("DELETE from counter WHERE name=?", (name,))
     db.commit()
-
-# something to load the database for 4 weeks of data
-# preload db.py
