@@ -16,7 +16,7 @@ class TestCounter:
         counter.store(self.db)
         counter.increment()
         counter.add_event(self.db)
-        counter.reset()
+        counter.reset(self.db)
         counter.increment()
 
     def test_db_counter(self):
