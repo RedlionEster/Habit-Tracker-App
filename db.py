@@ -22,13 +22,13 @@ def create_tables(db):
         FOREIGN KEY (counterName) REFERENCES counter(name))""")
     db.commit()
 
-
+# this function adds a counter
 def add_counter(db, name, description, periodicity):
     cur = db.cursor()
     cur.execute("INSERT INTO counter VALUES (?, ?, ?)", (name, description, periodicity))
     db.commit()
 
-
+# this function increments a counter
 def increment_counter(db, name, event_date=None):
     if not event_date:
         event_date = str(date.today())
@@ -36,7 +36,7 @@ def increment_counter(db, name, event_date=None):
     cur.execute("INSERT INTO tracker VALUES (?, ?)", (event_date, name))
     db.commit()
 
-
+# implement some error handling?
 def get_counter_data(db, name):
     cur = db.cursor()
     cur.execute("SELECT date FROM tracker WHERE counterName=?", (name,))
@@ -76,3 +76,4 @@ def get_counter(db, name):
     cur = db.cursor()
     cur.execute("SELECT * FROM counter WHERE name=?", (name,))
     return cur.fetchone()
+

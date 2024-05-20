@@ -1,18 +1,19 @@
 # My Habit-Tracker-App Project
 
-Introducing a Habit Tracking App project, created for the "Object-Oriented and Functional Programming with Python"
-course at the IU International University of Applied Sciences. 
+Introducing a Habit Tracking App project, created for the *Object-Oriented and Functional Programming with Python*
+Course at the IU International University of Applied Sciences. 
 
 
 ## What is it?
 
-This is a simple Command Line Interface (CLI) App designed to track your habits. 
+This App was programmed with Python.
+It's a simple Command Line Interface (CLI) App designed to track your habits. 
 Follow the prompts to add and complete habits.
 Create, implement, reset, delete, and monitor your habits with ease. 
 Analyze your participation to see how well you're sticking to your habits.
 
 
-## Installation
+## How to install it?
 
 1. Download the repository from GitHub: https://github.com/RedlionEster/Habit-Tracker-App
 2. Make sure you have Python 3.12+ installed on your computer.
@@ -26,7 +27,7 @@ pip install -r requirements.txt
 
 ## Load the database:
 
-Run the command to load the Database with 1 month of data:
+To load the Database with one month of data for testing purposes, run:
 
 ```shell
 python preload_db.py
@@ -34,9 +35,17 @@ python preload_db.py
 
 ## Usage:
 
-1. Run `python main.py` to start the app.
-2. Choose options to create, reset, analyse, delete and complete (increment) your habits,
-   using the arrow keys on your keyboard.
+1. Run `python main.py` to start the App.
+
+2. Use the arrow keys on your keyboard to choose from the following options:
+      
+   * Create: Add a new habit to track.  
+   * Increment: Mark your habit as completed for the current period.  
+   * Reset: Reset the progress of an existing habit.  
+   * Analyse: Review your habit tracking data.  
+   * Delete: Remove a habit from your tracking list.  
+   * Exit: Leave the App.  
+   
 
 ```shell
 python main.py

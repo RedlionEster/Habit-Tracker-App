@@ -2,6 +2,7 @@ from counter import Counter
 from db import get_db, add_counter, increment_counter, get_counter_data
 from analyse import calculate_count
 
+
 class TestCounter:
     def setup_method(self):
         self.db = get_db("test.db")
@@ -17,7 +18,7 @@ class TestCounter:
         counter.increment()
         counter.add_event(self.db)
         counter.reset(self.db)
-        counter.increment()
+        counter.delete_habit(self.db)
 
     def test_db_counter(self):
         data = get_counter_data(self.db, "test_counter")
