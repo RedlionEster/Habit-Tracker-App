@@ -1,4 +1,3 @@
-import db
 from db import add_counter, increment_counter, delete_counter, reset_counter
 
 
