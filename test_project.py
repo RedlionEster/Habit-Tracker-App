@@ -18,15 +18,18 @@ class TestCounter:
         counter.increment()
         counter.add_event(self.db)
         counter.reset(self.db)
+        counter.increment()
         counter.delete_habit(self.db)
+
 
     def test_db_counter(self):
         data = get_counter_data(self.db, "test_counter")
         assert len(data) == 4
-
         count = calculate_count(self.db, "test_counter")
         assert count == 4
 
+
+# deletes the test database once the test is completed
     def teardown_method(self):
         import os
         self.db.close()

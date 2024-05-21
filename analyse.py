@@ -1,5 +1,7 @@
 from db import get_counter_data
-import pandas as pd
+# import pandas as pd
+
+
 
 def calculate_count(db, counter):
     """
@@ -10,6 +12,7 @@ def calculate_count(db, counter):
     """
     data = get_counter_data(db, counter)
     return len(data)
+
 
 def calculate_streak(db, counter):
     """
@@ -28,25 +31,21 @@ def calculate_streak(db, counter):
     return streak
 
 
-def calculate_longest_streak(db, counter):
-    """
-    Calculate the longest streak of the counter
-    :param db: sqlite3 database connection
-    :param counter: name of the counter from the database
-    :return: longest streak of the counter, as an integer, 0 if no streak, date of the first streak,
-    date of the last streak, name of the counter
-    """
-    data = get_counter_data(db, counter)
+def calculate_longest_streak(db, name):
+    data = get_counter_data(db, name)
     if not data:
-        return 0
+        return 0  # Return 0 if there is no data for the habit
 
-    streak = 1
-    longest_streak = 1
+    # Example logic to calculate the longest streak
+    longest_streak = 0
+    current_streak = 0
     for i in range(1, len(data)):
-        if (data[i][0] - data[i - 1][0]).days == 1:
-            streak += 1
-            if streak > longest_streak:
-                longest_streak = streak
+        if (data[i][0] - data[i - 1][0]).days == 1:  # assuming consecutive days for streak
+            current_streak += 1
         else:
-            streak = 1
+            if current_streak > longest_streak:
+                longest_streak = current_streak
+            current_streak = 0
+    longest_streak = max(longest_streak, current_streak)  # final check in case the longest streak is at the end
+
     return longest_streak

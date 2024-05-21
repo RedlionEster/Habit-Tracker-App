@@ -1,5 +1,4 @@
 import questionary
-import sqlite3
 from db import get_db, habit_by_periodicity, get_habits_list, get_counter
 from counter import Counter
 from analyse import calculate_count, calculate_longest_streak
@@ -14,36 +13,48 @@ def cli():
     while not stop:
         choice = questionary.select(
             "What do you want to do?",
-            choices=["Create", "Increment", "Reset", "Analyse", "Delete", "Exit"]).ask()
+            choices=["Create", "Increment", "Reset", "Analyse", "Delete", "Exit"]
+        ).ask()
 
-        if choice == "Create":  # works - delete this comment later
+        if choice == "Create":  # When creating a new habit # works - delete this comment later
 
-            # When creating a new habit
+            habit_created = False
+
             try:
-                name = questionary.text("What's the name of your new habit?").ask()
-                desc = questionary.text("How do you wanna describe your habit?").ask()
-                per = questionary.select(
-                    "Is this a Daily or a Weekly habit?",
-                    choices=["Daily", "Weekly"]).ask()
-                counter = Counter(name, desc, per)
-                counter.store(db)
-                print(f"Habit '{name}' created!")
+                name = questionary.text("What's the name of your new habit?").ask()  # counter name
 
-            except sqlite3.IntegrityError:  # Display warning if user creates an already existing habit
-                print("This habit already exists.")
+                # Check if the habit already exists
+                if get_counter(db, name):
+                    print("This habit already exists.")
+                else:
+                    # Only ask for description and periodicity if the habit does not exist
+                    desc = questionary.text("How do you wanna describe your habit?").ask()  # counter description
+                    per = questionary.select(
+                        "Is this a Daily or a Weekly habit?",
+                        choices=["Daily", "Weekly"]).ask()
+                    counter = Counter(name, desc, per)
+                    counter.store(db)
+                    print(f"Habit '{name}' created!")
+                    habit_created = True
 
-        elif choice == "Increment":   # works - delete this comment later
+            finally:
+                if habit_created:
+                    print("Create habit process completed.")
+
+
+        elif choice == "Increment":
             # When incrementing an existing habit
             try:
-                name = questionary.text("What's the name of the counter you want to increment?").ask()
+                name = questionary.select(
+                    "What's the name of the habit you want to increment?",
+                    choices = get_habits_list(db)).ask()
                 counter = Counter(name, "No description", "No Periodicity")
                 counter.increment()
                 counter.add_event(db)
                 print(f"Counter '{name}' incremented!")
-
             # In case the habit we want to increment doesn't exist
             except ValueError:
-                print("This Habit doesn't exist. You can choose Create to create a new one.")
+                print("This Habit doesn't exist. You can choose Create to create a new habit.")
 
         elif choice == "Reset":   # works - delete this comment later
             name = questionary.text("What's the name of the counter you want to reset?").ask()
@@ -52,6 +63,7 @@ def cli():
                 counter = Counter(name, "No description", "No Periodicity")
                 counter.reset(db)
                 print(f"Counter '{name}' reset to 0!")
+
             # In case the habit we want to reset doesn't exist
             else:
                 print("This habit doesn't exist. You can't reset a non-existing Habit.")
@@ -60,12 +72,16 @@ def cli():
             analysis_choice = questionary.select("What do you want to analyse?", choices=[
                 "Habit", "Periodicity", "Longest Streak"]).ask()
 
-            if analysis_choice == "Habit":
+            if analysis_choice == "Habit":  # works - delete this comment later
                 name = questionary.text("What habit do you want to analyse?").ask()
                 count = calculate_count(db, name)
-                print(f"{name} has been incremented {count} times")
 
-            elif analysis_choice == "Periodicity":
+                if count is None or count == 0:
+                    print(f"The habit '{name}' does not exist or has no increments recorded.")
+                else:
+                    print(f"{name} has been incremented {count} times")
+
+            elif analysis_choice == "Periodicity":  # works - delete this comment later
                 per = questionary.select("Select a periodicity", choices=["Daily", "Weekly"]).ask()
                 name = questionary.select("Select the habit", choices=habit_by_periodicity(db, per)).ask()
                 count = calculate_count(db, name)

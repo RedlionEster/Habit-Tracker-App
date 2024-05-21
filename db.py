@@ -22,19 +22,22 @@ def create_tables(db):
         FOREIGN KEY (counterName) REFERENCES counter(name))""")
     db.commit()
 
+
 # this function adds a counter
 def add_counter(db, name, description, periodicity):
     cur = db.cursor()
     cur.execute("INSERT INTO counter VALUES (?, ?, ?)", (name, description, periodicity))
     db.commit()
 
+
 # this function increments a counter
 def increment_counter(db, name, event_date=None):
     if not event_date:
         event_date = str(date.today())
     cur = db.cursor()
-    cur.execute("INSERT INTO tracker VALUES (?, ?)", (event_date, name))
+    cur.execute("INSERT INTO tracker (date, counterName) VALUES (?, ?)", (event_date, name))
     db.commit()
+
 
 # implement some error handling?
 def get_counter_data(db, name):
@@ -49,9 +52,9 @@ def habit_by_periodicity(db, periodicity):
     return [row[0] for row in cur.fetchall()]
 
 
-def get_habits_list(db):  #check if this part works
+def get_habits_list(db):  # check if this part works
     cur = db.cursor()
-    cur.execute("Select counter")
+    cur.execute("SELECT name FROM counter")
     all_habits = cur.fetchall()
     habits_set = set()
     for counters in all_habits:
@@ -76,4 +79,3 @@ def get_counter(db, name):
     cur = db.cursor()
     cur.execute("SELECT * FROM counter WHERE name=?", (name,))
     return cur.fetchone()
-
