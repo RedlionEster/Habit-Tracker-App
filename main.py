@@ -44,7 +44,6 @@ def cli():
                     print("Create habit process completed.")
 
 
-
         elif choice == "Increment":   # When incrementing an existing habit # it works - delete this comment later
 
             habits = get_habits_list(db)
@@ -76,7 +75,8 @@ def cli():
 
             name = questionary.select(
                 message="What's the name of the counter you want to reset?",
-                choices=habits).ask()
+                choices=habits
+            ).ask()
 
             if name == "Exit":
                 print("Exiting reset process.")
@@ -88,23 +88,54 @@ def cli():
 
 
         elif choice == "Analyse":
-            analysis_choice = questionary.select("What do you want to analyse?", choices=[
-                "Habit", "Periodicity", "Longest Streak"]).ask()
+
+            analysis_choice = questionary.select("What do you want to analyse?",
+                choices=["Habit", "Periodicity", "Longest Streak"]
+            ).ask()
 
             if analysis_choice == "Habit":  # works - delete this comment later
-                name = questionary.text("What habit do you want to analyse?").ask()
-                count = calculate_count(db, name)
+                habits = get_habits_list(db)
+                habits = [habit for habit in habits if habit != "exit"]
+                habits.sort()  # Sort the list of habits
+                habits.append("Exit")  # Ensure 'Exit' is always at the bottom
 
-                if count is None or count == 0:
-                    print(f"The habit '{name}' does not exist or has no increments recorded.")
+                name = questionary.select(message="What habit do you want to analyse?",
+                    choices=habits
+                ).ask()
+
+                if name == "Exit":
+                    print("Exiting analysis process.")
                 else:
+                    count = calculate_count(db, name)
                     print(f"{name} has been incremented {count} times")
 
-            elif analysis_choice == "Periodicity":  # works - delete this comment later
-                per = questionary.select("Select a periodicity", choices=["Daily", "Weekly"]).ask()
-                name = questionary.select("Select the habit", choices=habit_by_periodicity(db, per)).ask()
-                count = calculate_count(db, name)
-                print(f"{name} has been incremented {count} times")
+
+            elif analysis_choice == "Periodicity":
+
+                periodicity = questionary.select(
+                    message="Select a periodicity",
+                    choices=["Daily", "Weekly", "Exit"]
+                ).ask()
+
+                if periodicity == "Exit":
+                    print("Exiting analysis process.")
+                else:
+                    habits = habit_by_periodicity(db, periodicity)
+                    habits = [habit for habit in habits if habit != "exit"]
+                    habits.sort()  # Sort the list of habits
+                    habits.append("Exit")  # Ensure 'Exit' is always at the bottom
+
+                    name = questionary.select(
+                        message="Select the habit",
+                        choices=habits
+                    ).ask()
+
+                    if name == "Exit":
+                        print("Exiting analysis process.")
+                    else:
+                        count = calculate_count(db, name)
+                        print(f"{name} has been incremented {count} times")
+
 
             elif analysis_choice == "Longest Streak":
                 name = questionary.text("What habit do you want to analyse for the longest streak?").ask()
