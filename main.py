@@ -21,7 +21,7 @@ def cli():
             habit_created = False
 
             try:
-                name = questionary.text("What's the name of your new habit?").ask()  # counter name
+                name = questionary.text("What's the name of your new habit?").ask()  # type the counter name
 
                 # Check if the habit already exists
                 if get_counter(db, name):
@@ -31,7 +31,9 @@ def cli():
                     desc = questionary.text("How do you wanna describe your habit?").ask()  # counter description
                     per = questionary.select(
                         "Is this a Daily or a Weekly habit?",
-                        choices=["Daily", "Weekly"]).ask()
+                        choices=["Daily", "Weekly"]
+                    ).ask()
+
                     counter = Counter(name, desc, per)
                     counter.store(db)
                     print(f"Habit '{name}' created!")
@@ -42,31 +44,48 @@ def cli():
                     print("Create habit process completed.")
 
 
-        elif choice == "Increment":
-            # When incrementing an existing habit
-            try:
-                name = questionary.select(
-                    "What's the name of the habit you want to increment?",
-                    choices = get_habits_list(db)).ask()
-                counter = Counter(name, "No description", "No Periodicity")
+
+        elif choice == "Increment":   # When incrementing an existing habit # it works - delete this comment later
+
+            habits = get_habits_list(db)
+            habits = [habit for habit in habits if habit != "exit"]
+            habits.sort()  # Sort the list of habits
+            habits.append("Exit")  # Ensure 'exit' is always at the bottom
+
+            name = questionary.select(
+                message="What's the name of the habit you want to increment?",
+                choices=habits
+            ).ask()
+
+            if name == "Exit":
+                print("Exiting increment process.")
+
+            else:
+                counter = Counter(name, description="No description", periodicity="No Periodicity")
                 counter.increment()
                 counter.add_event(db)
                 print(f"Counter '{name}' incremented!")
-            # In case the habit we want to increment doesn't exist
-            except ValueError:
-                print("This Habit doesn't exist. You can choose Create to create a new habit.")
 
-        elif choice == "Reset":   # works - delete this comment later
-            name = questionary.text("What's the name of the counter you want to reset?").ask()
-            # When resetting an existing habit
-            if get_counter(db, name):
-                counter = Counter(name, "No description", "No Periodicity")
+
+        elif choice == "Reset": # When resetting an existing habit  # it works - delete this comment later
+
+            habits = get_habits_list(db)
+            habits = [habit for habit in habits if habit != "exit"]
+            habits.sort()  # Sort the list of habits
+            habits.append("Exit")  # Ensure 'Exit' is always at the bottom
+
+            name = questionary.select(
+                message="What's the name of the counter you want to reset?",
+                choices=habits).ask()
+
+            if name == "Exit":
+                print("Exiting reset process.")
+
+            else:
+                counter = Counter(name, description="No description", periodicity="No Periodicity")
                 counter.reset(db)
                 print(f"Counter '{name}' reset to 0!")
 
-            # In case the habit we want to reset doesn't exist
-            else:
-                print("This habit doesn't exist. You can't reset a non-existing Habit.")
 
         elif choice == "Analyse":
             analysis_choice = questionary.select("What do you want to analyse?", choices=[
@@ -92,14 +111,23 @@ def cli():
                 streak = calculate_longest_streak(db, name)
                 print(f"The longest streak for {name} is {streak} times")
 
-        elif choice == "Delete":  # works - delete this comment later
-            name = questionary.text("What's the name of the counter you want to delete?").ask()
-            if get_counter(db, name):
-                counter = Counter(name, "No description", "No Periodicity")
-                counter.delete_habit(db)
-                print(f"{name} has been deleted")
+        elif choice == "Delete":  # When deleting an existing habit  # works - delete this comment later
+
+            habits = get_habits_list(db)
+            habits = [habit for habit in habits if habit != "exit"]
+            habits.sort()  # Sort the list of habits
+            habits.append("Exit")  # Ensure 'Exit' is always at the bottom
+
+            name = questionary.select(
+                message="What's the name of the counter you want to delete?",
+                choices=habits).ask()
+
+            if name == "Exit":
+                print("Exiting delete process.")
             else:
-                print("This habit doesn't exist. You can't delete a non-existing Habit.")
+                counter = Counter(name, description="No description", periodicity="No Periodicity")
+                counter.delete_habit(db)
+                print(f"Counter '{name}' has been deleted")
 
         else:
             print("You closed the Habit Tracking App!")
