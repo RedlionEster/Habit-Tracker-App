@@ -2,7 +2,7 @@ from db import get_db, add_counter, increment_counter
 
 
 def preload_db():
-    db = get_db("test.db")
+    db = get_db()
 
     add_counter(db, "run", "sport", "daily")
     for day in range(1, 31):

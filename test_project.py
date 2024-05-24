@@ -1,6 +1,6 @@
 from counter import Counter
 from db import get_db, add_counter, increment_counter, get_counter_data
-from analyse import calculate_count
+from analyse import calculate_count, calculate_longest_streak
 
 
 class TestCounter:

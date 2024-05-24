@@ -2,12 +2,14 @@ import sqlite3
 from datetime import date
 
 
+# this function connects to the sqlite3 database and returns the database
 def get_db(name="main.db"):
     db = sqlite3.connect(name)
     create_tables(db)
     return db
 
 
+# this function creates tables
 def create_tables(db):
     cur = db.cursor()
 
@@ -23,14 +25,14 @@ def create_tables(db):
     db.commit()
 
 
-# this function adds a counter
+# this function adds a habit
 def add_counter(db, name, description, periodicity):
     cur = db.cursor()
     cur.execute("INSERT INTO counter VALUES (?, ?, ?)", (name, description, periodicity))
     db.commit()
 
 
-# this function increments a counter
+# this function increments a habit
 def increment_counter(db, name, event_date=None):
     if not event_date:
         event_date = str(date.today())
@@ -39,20 +41,22 @@ def increment_counter(db, name, event_date=None):
     db.commit()
 
 
-# implement some error handling?
+# this function retrieves the data for the selected habit (counter)
 def get_counter_data(db, name):
     cur = db.cursor()
     cur.execute("SELECT date FROM tracker WHERE counterName=?", (name,))
     return [(date.fromisoformat(row[0]),) for row in cur.fetchall()]
 
 
+# this function selects the periodicity for a selected habit
 def habit_by_periodicity(db, periodicity):
     cur = db.cursor()
     cur.execute("SELECT name FROM counter WHERE periodicity=?", (periodicity,))
     return [row[0] for row in cur.fetchall()]
 
 
-def get_habits_list(db):  # check if this part works
+# this function returns a list with the habits
+def get_habits_list(db):
     cur = db.cursor()
     cur.execute("SELECT name FROM counter")
     all_habits = cur.fetchall()
@@ -62,12 +66,14 @@ def get_habits_list(db):  # check if this part works
     return list(habits_set)
 
 
+# this function resets the habit (counter) to 0
 def reset_counter(db, name):
     cur = db.cursor()
     cur.execute("DELETE FROM tracker WHERE counterName=?", (name,))
     db.commit()
 
 
+# this function deletes the habit (counter)
 def delete_counter(db, name):
     cur = db.cursor()
     cur.execute("DELETE FROM tracker WHERE counterName=?", (name,))
@@ -75,6 +81,7 @@ def delete_counter(db, name):
     db.commit()
 
 
+# this function checks if the habit name we typed already exists
 def get_counter(db, name):
     cur = db.cursor()
     cur.execute("SELECT * FROM counter WHERE name=?", (name,))

@@ -6,33 +6,34 @@ from analyse import calculate_count, calculate_longest_streak
 
 def cli():
     db = get_db()
-    questionary.confirm("Hi User! Welcome to your Habit Tracking App! Wanna proceed?").ask()
+
+    while True:
+        if questionary.confirm("Hi User! Welcome to your Habit Tracking App! Wanna proceed?").ask() == True:
+            break
 
     stop = False
 
     while not stop:
         choice = questionary.select(
             "What do you want to do?",
-            choices=["Create", "Increment", "Reset", "Analyse", "Delete", "Exit"]
-        ).ask()
+            choices=["Create", "Increment", "Reset", "Analyse", "Delete", "Exit"]).ask()
 
-        if choice == "Create":  # When creating a new habit # works - delete this comment later
+        if choice == "Create":  # To choose when creating a new habit
 
             habit_created = False
 
             try:
-                name = questionary.text("What's the name of your new habit?").ask()  # type the counter name
+                name = questionary.text("What's the name of your new habit?").ask()
 
                 # Check if the habit already exists
                 if get_counter(db, name):
                     print("This habit already exists.")
                 else:
-                    # Only ask for description and periodicity if the habit does not exist
-                    desc = questionary.text("How do you wanna describe your habit?").ask()  # counter description
+                    # Only ask for description and periodicity when entering a new habit
+                    desc = questionary.text("How do you wanna describe your habit?").ask()
                     per = questionary.select(
                         "Is this a Daily or a Weekly habit?",
-                        choices=["Daily", "Weekly"]
-                    ).ask()
+                        choices=["Daily", "Weekly"]).ask()
 
                     counter = Counter(name, desc, per)
                     counter.store(db)
@@ -44,17 +45,16 @@ def cli():
                     print("Create habit process completed.")
 
 
-        elif choice == "Increment":   # When incrementing an existing habit # it works - delete this comment later
+        elif choice == "Increment":   # When incrementing an existing habit
 
             habits = get_habits_list(db)
             habits = [habit for habit in habits if habit != "exit"]
             habits.sort()  # Sort the list of habits
-            habits.append("Exit")  # Ensure 'exit' is always at the bottom
+            habits.append("Exit")  # Ensure "Exit" is always at the bottom of the list
 
             name = questionary.select(
                 message="What's the name of the habit you want to increment?",
-                choices=habits
-            ).ask()
+                choices=habits).ask()
 
             if name == "Exit":
                 print("Exiting increment process.")
@@ -66,7 +66,7 @@ def cli():
                 print(f"Counter '{name}' incremented!")
 
 
-        elif choice == "Reset": # When resetting an existing habit  # it works - delete this comment later
+        elif choice == "Reset":
 
             habits = get_habits_list(db)
             habits = [habit for habit in habits if habit != "exit"]
@@ -75,8 +75,7 @@ def cli():
 
             name = questionary.select(
                 message="What's the name of the counter you want to reset?",
-                choices=habits
-            ).ask()
+                choices=habits).ask()
 
             if name == "Exit":
                 print("Exiting reset process.")
@@ -90,18 +89,16 @@ def cli():
         elif choice == "Analyse":
 
             analysis_choice = questionary.select("What do you want to analyse?",
-                choices=["Habit", "Periodicity", "Longest Streak"]
-            ).ask()
+                choices=["Habit", "Periodicity", "Longest Streak"]).ask()
 
-            if analysis_choice == "Habit":  # works - delete this comment later
+            if analysis_choice == "Habit":
                 habits = get_habits_list(db)
                 habits = [habit for habit in habits if habit != "exit"]
                 habits.sort()  # Sort the list of habits
                 habits.append("Exit")  # Ensure 'Exit' is always at the bottom
 
                 name = questionary.select(message="What habit do you want to analyse?",
-                    choices=habits
-                ).ask()
+                    choices=habits).ask()
 
                 if name == "Exit":
                     print("Exiting analysis process.")
@@ -114,8 +111,7 @@ def cli():
 
                 periodicity = questionary.select(
                     message="Select a periodicity",
-                    choices=["Daily", "Weekly", "Exit"]
-                ).ask()
+                    choices=["Daily", "Weekly", "Exit"]).ask()
 
                 if periodicity == "Exit":
                     print("Exiting analysis process.")
@@ -127,8 +123,7 @@ def cli():
 
                     name = questionary.select(
                         message="Select the habit",
-                        choices=habits
-                    ).ask()
+                        choices=habits).ask()
 
                     if name == "Exit":
                         print("Exiting analysis process.")
@@ -138,16 +133,28 @@ def cli():
 
 
             elif analysis_choice == "Longest Streak":
-                name = questionary.text("What habit do you want to analyse for the longest streak?").ask()
-                streak = calculate_longest_streak(db, name)
-                print(f"The longest streak for {name} is {streak} times")
+                habits = get_habits_list(db)
+                habits = [habit for habit in habits if habit != "exit"]
+                habits.sort()  # Sort the list of habits
+                habits.append("Exit")
 
-        elif choice == "Delete":  # When deleting an existing habit  # works - delete this comment later
+                name = questionary.select(
+                    message="What habit do you want to analyse for the longest streak?",
+                    choices=habits).ask()
+
+                if name == "Exit":
+                    print("Exiting analysis process.")
+                else:
+                    streak = calculate_longest_streak(db, name)
+                    print(f"The longest streak for {name} is {streak} times")
+
+
+        elif choice == "Delete":  # When deleting an existing habit
 
             habits = get_habits_list(db)
             habits = [habit for habit in habits if habit != "exit"]
             habits.sort()  # Sort the list of habits
-            habits.append("Exit")  # Ensure 'Exit' is always at the bottom
+            habits.append("Exit")
 
             name = questionary.select(
                 message="What's the name of the counter you want to delete?",

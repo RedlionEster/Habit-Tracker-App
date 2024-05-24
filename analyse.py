@@ -2,7 +2,7 @@ from db import get_counter_data
 # import pandas as pd
 
 
-
+# returns the list of all currently tracked habits
 def calculate_count(db, counter):
     """
     Calculate the count of the counter
@@ -31,21 +31,24 @@ def calculate_streak(db, counter):
     return streak
 
 
+# this function returns the longest streak for a given habit
 def calculate_longest_streak(db, name):
     data = get_counter_data(db, name)
     if not data:
         return 0  # Return 0 if there is no data for the habit
 
+    data.sort()  # sort the dates
     # Example logic to calculate the longest streak
     longest_streak = 0
-    current_streak = 0
+    current_streak = 1
+
     for i in range(1, len(data)):
         if (data[i][0] - data[i - 1][0]).days == 1:  # assuming consecutive days for streak
             current_streak += 1
         else:
             if current_streak > longest_streak:
                 longest_streak = current_streak
-            current_streak = 0
+            current_streak = 1
+
     longest_streak = max(longest_streak, current_streak)  # final check in case the longest streak is at the end
 
-    return longest_streak

@@ -58,6 +58,6 @@ class Counter:
 
 
 # just temporary code to test the counter locally - comment out or delete later
-counter = Counter("test name", "test description", "test periodicity")
-counter.increment()
-print(counter)
+# counter = Counter("test name", "test description", "test periodicity")
+# counter.increment()
+# print(counter)
