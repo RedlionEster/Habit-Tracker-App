@@ -2,6 +2,7 @@ import sqlite3
 from counter import Counter
 from analyse import calculate_longest_streak
 
+
 def test_create_habit():
     db = sqlite3.connect(':memory:')
     cursor = db.cursor()
@@ -24,6 +25,7 @@ def test_create_habit():
     cursor.execute("SELECT name FROM habits WHERE name = 'Test Habit'")
     habit = cursor.fetchone()
     assert habit[0] == "Test Habit"
+
 
 def test_increment_habit():
     db = sqlite3.connect(':memory:')
@@ -48,6 +50,7 @@ def test_increment_habit():
     cursor.execute("SELECT count FROM counters WHERE habit_id = ?", (counter.id,))
     count = cursor.fetchone()
     assert count[0] == 1
+
 
 def test_calculate_longest_streak():
     db = sqlite3.connect(':memory:')

@@ -8,7 +8,6 @@ class Counter:
         self.periodicity = periodicity
         self.creation_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-
     def store(self, db):
         cursor = db.cursor()
         cursor.execute('''INSERT INTO habits (name, description, periodicity, creation_date)
@@ -19,7 +18,6 @@ class Counter:
                           VALUES (?, 0, ?)''', (self.id, self.creation_date))
         db.commit()
 
-
     def increment(self, db):
         cursor = db.cursor()
         cursor.execute('''UPDATE counters
@@ -27,14 +25,12 @@ class Counter:
                           WHERE habit_id = ?''', (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), self.id))
         db.commit()
 
-
     def reset(self, db):
         cursor = db.cursor()
         cursor.execute('''UPDATE counters
                           SET count = 0, last_increment_date = ?
                           WHERE habit_id = ?''', (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), self.id))
         db.commit()
-
 
     def delete(self, db):
         cursor = db.cursor()

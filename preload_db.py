@@ -1,6 +1,7 @@
 import sqlite3
 from counter import Counter
 
+
 def preload_db():
     db = sqlite3.connect('main.db')
     cursor = db.cursor()
@@ -41,6 +42,7 @@ def preload_db():
 
     db.commit()
     db.close()
+
 
 if __name__ == "__main__":
     preload_db()
