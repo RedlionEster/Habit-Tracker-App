@@ -87,12 +87,6 @@ The application comes with the following predefined habits:
 * Grocery Shopping (Weekly)
 
 Each habit has example tracking data for a period of 4 weeks.
-   
-
-```shell
-python main.py
-```
-
 
 ## Tests:
 
