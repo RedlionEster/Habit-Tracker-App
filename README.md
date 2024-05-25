@@ -80,11 +80,12 @@ The habit will be removed from the database.
 ## Example Habits
 The application comes with the following predefined habits:
 
-Exercise (Daily)
-Read (Daily)
-Meditate (Daily)
-Weekly Review (Weekly)
-Grocery Shopping (Weekly)
+* Exercise (Daily)
+* Read (Daily)
+* Meditate (Daily)
+* Weekly Review (Weekly)
+* Grocery Shopping (Weekly)
+
 Each habit has example tracking data for a period of 4 weeks.
    
 
