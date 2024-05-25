@@ -19,7 +19,7 @@ def cli():
             choices=["Create a New Habit",
                      "Increment Habit",
                      "Reset Habit",
-                     "Analyse Habit",
+                     "Analyse Habits",
                      "Delete Habit",
                      "Exit"]).ask()
 
@@ -29,7 +29,7 @@ def cli():
             increment_habit(db)
         elif choice == "Reset Habit":
             reset_habit(db)
-        elif choice == "Analyse Habit":
+        elif choice == "Analyse Habits":
             analyse_habits(db)
         elif choice == "Delete Habit":
             delete_habit(db)

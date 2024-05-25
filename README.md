@@ -42,29 +42,38 @@ python preload_db.py
    * Create a New Habit: Add a new habit to track.  
    * Increment Habit: Mark your habit as completed for the current period.  
    * Reset Habit: Reset the progress of an existing habit.  
-   * Analyse Habit: Review your habit tracking data.  
+   * Analyse Habits: Review your habit tracking data.  
    * Delete Habit: Remove a habit from your tracking list.  
    * Exit: Leave the App.  
 
 ### Creating a New Habit
-Run the application and select "Create".
-Enter the name of your new habit.
-Enter a description for your habit.
-Choose whether it's a Daily or Weekly habit.
-The habit will be created and stored in the database.
+* Run the application and select "Create a New Habit".
+* Enter the name of your new habit.
+* Enter a description for your habit.
+* Choose whether it's a Daily or Weekly habit.
+* The habit will be created and stored in the database.
 
 ### Completing a Task
-Run the application and select "Increment".
-Select the habit you want to increment.
-The habit's count will be incremented, and the last increment date will be updated.
+* Run the application and select "Increment Habit".
+* Select the habit you want to increment.
+* The habit's count will be incremented, and the last increment date will be updated.
 
 ### Resetting a Habit
-Run the application and select "Reset".
-Select the habit you want to reset.
-The habit's count will be reset to 0.
+* Run the application and select "Reset Habit".
+* Select the habit you want to reset.
+* The habit's count will be reset to 0.
+
+### Analyzing Habits
+* Run the application and select "Analyse Habits".
+* Choose from the following options:
+
+   *List all habits:* View a list of all currently tracked habits.
+   *List habits by periodicity:* View habits filtered by their periodicity (Daily or Weekly).
+   *Longest streak of all habits:* View the longest streak achieved among all habits.
+   *Longest streak for a habit:* View the longest streak achieved for a specific habit.
 
 ### Deleting a Habit
-Run the application and select "Delete".
+Run the application and select "Delete Habit".
 Select the habit you want to delete.
 The habit will be removed from the database.
 
