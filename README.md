@@ -78,7 +78,7 @@ Select the habit you want to delete.
 The habit will be removed from the database.
 
 ## Example Habits
-The application comes with the following predefined habits:
+The application comes with the following predefined habits for testing purpose:
 
 * Exercise (Daily)
 * Read (Daily)
