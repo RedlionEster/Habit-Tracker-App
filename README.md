@@ -56,7 +56,7 @@ python preload_db.py
 ### Completing a Task
 * Run the application and select "Increment Habit".
 * Select the habit you want to increment.
-* The habit's count will be incremented, and the last increment date will be updated.
+* The habit's count will be incremented by 1, and the last increment date will be updated.
 
 ### Resetting a Habit
 * Run the application and select "Reset Habit".
