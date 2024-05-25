@@ -67,10 +67,10 @@ python preload_db.py
 * Run the application and select "Analyse Habits".
 * Choose from the following options:
 
-   -*List all habits:* View a list of all currently tracked habits.
-   -*List habits by periodicity:* View habits filtered by their periodicity (Daily or Weekly).
-   -*Longest streak of all habits:* View the longest streak achieved among all habits.
-   -*Longest streak for a habit:* View the longest streak achieved for a specific habit.
+* List all habits: View a list of all currently tracked habits.
+* List habits by periodicity: View habits filtered by their periodicity (Daily or Weekly).
+* Longest streak of all habits: View the longest streak achieved among all habits.
+* Longest streak for a habit: View the longest streak achieved for a specific habit.
 
 ### Deleting a Habit
 Run the application and select "Delete Habit".
