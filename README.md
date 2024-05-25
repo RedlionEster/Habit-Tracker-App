@@ -39,12 +39,44 @@ python preload_db.py
 
 2. Use the arrow keys on your keyboard to choose from the following options:
       
-   * Create: Add a new habit to track.  
-   * Increment: Mark your habit as completed for the current period.  
-   * Reset: Reset the progress of an existing habit.  
-   * Analyse: Review your habit tracking data.  
-   * Delete: Remove a habit from your tracking list.  
+   * Create a New Habit: Add a new habit to track.  
+   * Increment Habit: Mark your habit as completed for the current period.  
+   * Reset Habit: Reset the progress of an existing habit.  
+   * Analyse Habit: Review your habit tracking data.  
+   * Delete Habit: Remove a habit from your tracking list.  
    * Exit: Leave the App.  
+
+### Creating a New Habit
+Run the application and select "Create".
+Enter the name of your new habit.
+Enter a description for your habit.
+Choose whether it's a Daily or Weekly habit.
+The habit will be created and stored in the database.
+
+### Completing a Task
+Run the application and select "Increment".
+Select the habit you want to increment.
+The habit's count will be incremented, and the last increment date will be updated.
+
+### Resetting a Habit
+Run the application and select "Reset".
+Select the habit you want to reset.
+The habit's count will be reset to 0.
+
+### Deleting a Habit
+Run the application and select "Delete".
+Select the habit you want to delete.
+The habit will be removed from the database.
+
+## Example Habits
+The application comes with the following predefined habits:
+
+Exercise (Daily)
+Read (Daily)
+Meditate (Daily)
+Weekly Review (Weekly)
+Grocery Shopping (Weekly)
+Each habit has example tracking data for a period of 4 weeks.
    
 
 ```shell

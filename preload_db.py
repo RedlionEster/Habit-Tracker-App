@@ -42,17 +42,11 @@ def preload_db():
         counter = Counter(habit['name'], habit['desc'], habit['per'])
         counter.store(db)
 
-        # Simulate completing the habit over time
-        if habit['name'] == "Exercise":
-            add_habit_completions(db, counter.id, 14, "days")  # 14-day streak
-        elif habit['name'] == "Read":
-            add_habit_completions(db, counter.id, 5, "days")  # 5-day streak
-        elif habit['name'] == "Meditate":
-            add_habit_completions(db, counter.id, 7, "days")  # 7-day streak
-        elif habit['name'] == "Weekly Review":
-            add_habit_completions(db, counter.id, 4, "weeks")  # 4-week streak
-        elif habit['name'] == "Grocery Shopping":
-            add_habit_completions(db, counter.id, 2, "weeks")  # 2-week streak
+        # Simulate completing the habit over time (4 weeks of data)
+        if habit['per'] == "Daily":
+            add_habit_completions(db, counter.id, 28, "days")  # 4 weeks of daily completions
+        elif habit['per'] == "Weekly":
+            add_habit_completions(db, counter.id, 4, "weeks")  # 4 weeks of weekly completions
 
     db.commit()
     db.close()
