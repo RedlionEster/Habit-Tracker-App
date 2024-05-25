@@ -64,8 +64,8 @@ python preload_db.py
 * The habit's count will be reset to 0.
 
 ### Analyzing Habits
-* Run the application and select "Analyse Habits".
-* Choose from the following options:
+1. Run the application and select "Analyse Habits".
+2. Choose from the following options:
 
 * List all habits: View a list of all currently tracked habits.
 * List habits by periodicity: View habits filtered by their periodicity (Daily or Weekly).
