@@ -61,7 +61,7 @@ and that database operations are performed as expected.
 Run the test using the following command:
 
 ```shell
-python -m pytest
+python -m pytest test_project.py
 ```
 
 ## Note:

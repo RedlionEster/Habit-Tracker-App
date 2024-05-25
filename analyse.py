@@ -1,14 +1,14 @@
-from db import get_habits_list
+from db import get_habits_list, get_counter
 
 
 def calculate_longest_streak(db, habit_name):
     cursor = db.cursor()
-    cursor.execute('''SELECT count FROM counters 
+    cursor.execute('''SELECT streak FROM counters 
                       INNER JOIN habits ON counters.habit_id = habits.id 
                       WHERE habits.name = ?''', (habit_name,))
-    count = cursor.fetchone()
-    if count:
-        return count[0]
+    streak = cursor.fetchone()
+    if streak:
+        return streak[0]
     return 0
 
 
