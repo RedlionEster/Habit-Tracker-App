@@ -1,7 +1,8 @@
 import questionary
 from db import get_db, habit_by_periodicity, get_habits_list, get_counter
 from counter import Counter
-from analyse import calculate_longest_streak, longest_streak_all_habits, longest_streak_for_habit
+from analyse import longest_streak_all_habits, longest_streak_for_habit
+
 
 def cli():
     db = get_db()
@@ -34,6 +35,7 @@ def cli():
         elif choice == "Exit":
             stop = True
 
+
 def create_habit(db):
     name = questionary.text("What's the name of your new habit?").ask()
     if get_counter(db, name):
@@ -45,26 +47,35 @@ def create_habit(db):
         counter.store(db)
         print(f"Habit '{name}' created!")
 
+
 def increment_habit(db):
     habits = get_habits_list(db)
-    name = questionary.select("What's the name of the habit you want to increment?", choices=habits + ["Exit"]).ask()
+    name = questionary.select(
+        "What's the name of the habit you want to increment?", choices=habits + ["Exit"]).ask()
     if name != "Exit":
         counter = get_counter(db, name)
         counter.increment(db)
         print(f"Habit '{name}' incremented!")
 
+
 def reset_habit(db):
     habits = get_habits_list(db)
-    name = questionary.select("What's the name of the habit you want to reset?", choices=habits + ["Exit"]).ask()
+    name = questionary.select(
+        "What's the name of the habit you want to reset?", choices=habits + ["Exit"]).ask()
     if name != "Exit":
         counter = get_counter(db, name)
         counter.reset(db)
         print(f"Habit '{name}' reset!")
 
+
 def analyse_habits(db):
     analysis_choice = questionary.select(
         "What analysis would you like to perform?",
-        choices=["List all habits", "List habits by periodicity", "Longest streak of all habits", "Longest streak for a habit", "Exit"]).ask()
+        choices=["List all habits",
+                 "List habits by periodicity",
+                 "Longest streak of all habits",
+                 "Longest streak for a habit", "Exit"]).ask()
+
 
     if analysis_choice == "List all habits":
         habits = get_habits_list(db)
@@ -92,6 +103,7 @@ def analyse_habits(db):
 
     elif analysis_choice == "Exit":
         return
+
 
 def delete_habit(db):
     habits = get_habits_list(db)
