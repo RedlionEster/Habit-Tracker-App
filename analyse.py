@@ -1,54 +1,23 @@
-from db import get_counter_data
-# import pandas as pd
+from db import get_habits_list
 
+def calculate_longest_streak(db, habit_name):
+    cursor = db.cursor()
+    cursor.execute('''SELECT count FROM counters 
+                      INNER JOIN habits ON counters.habit_id = habits.id 
+                      WHERE habits.name = ?''', (habit_name,))
+    count = cursor.fetchone()
+    if count:
+        return count[0]
+    return 0
 
-# returns the list of all currently tracked habits
-def calculate_count(db, counter):
-    """
-    Calculate the count of the counter
-    :param db: sqlite3 database connection
-    :param counter: name of the counter from the database
-    :return: returns the number of the counter incremented events
-    """
-    data = get_counter_data(db, counter)
-    return len(data)
-
-
-def calculate_streak(db, counter):
-    """
-    Calculate the streak of the counter
-    :param db: sqlite3 database connection
-    :param counter: name of the counter from the database
-    :return: streak of the counter, as an integer, 0 if no streak, date of the first streak, date of the last streak
-    """
-    data = get_counter_data(db, counter)
-    streak = 0
-    for i in range(len(data)):
-        if data[i][0] == data[i-1][0]:
-            streak += 1
-        else:
-            streak = 0
-    return streak
-
-
-# this function returns the longest streak for a given habit
-def calculate_longest_streak(db, name):
-    data = get_counter_data(db, name)
-    if not data:
-        return 0  # Return 0 if there is no data for the habit
-
-    data.sort()  # sort the dates
-    # Example logic to calculate the longest streak
+def longest_streak_all_habits(db):
+    habits = get_habits_list(db)
     longest_streak = 0
-    current_streak = 1
+    for habit in habits:
+        streak = calculate_longest_streak(db, habit)
+        if streak > longest_streak:
+            longest_streak = streak
+    return longest_streak
 
-    for i in range(1, len(data)):
-        if (data[i][0] - data[i - 1][0]).days == 1:  # assuming consecutive days for streak
-            current_streak += 1
-        else:
-            if current_streak > longest_streak:
-                longest_streak = current_streak
-            current_streak = 1
-
-    longest_streak = max(longest_streak, current_streak)  # final check in case the longest streak is at the end
-
+def longest_streak_for_habit(db, habit_name):
+    return calculate_longest_streak(db, habit_name)

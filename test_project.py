@@ -1,36 +1,75 @@
+import sqlite3
 from counter import Counter
-from db import get_db, add_counter, increment_counter, get_counter_data
-from analyse import calculate_count, calculate_longest_streak
+from db import get_habits_list, get_counter
+from analyse import calculate_longest_streak
 
+def test_create_habit():
+    db = sqlite3.connect(':memory:')
+    cursor = db.cursor()
+    cursor.execute('''CREATE TABLE habits (
+                        id INTEGER PRIMARY KEY,
+                        name TEXT UNIQUE NOT NULL,
+                        description TEXT,
+                        periodicity TEXT NOT NULL,
+                        creation_date TEXT
+                    )''')
+    cursor.execute('''CREATE TABLE counters (
+                        id INTEGER PRIMARY KEY,
+                        habit_id INTEGER,
+                        count INTEGER,
+                        last_increment_date TEXT,
+                        FOREIGN KEY (habit_id) REFERENCES habits (id)
+                    )''')
+    counter = Counter("Test Habit", "This is a test habit", "Daily")
+    counter.store(db)
+    cursor.execute("SELECT name FROM habits WHERE name = 'Test Habit'")
+    habit = cursor.fetchone()
+    assert habit[0] == "Test Habit"
 
-class TestCounter:
-    def setup_method(self):
-        self.db = get_db("test.db")
-        add_counter(self.db, "test_counter", "test_description", "test_periodicity")
-        increment_counter(self.db, "test_counter", "2023-07-14")
-        increment_counter(self.db, "test_counter", "2023-07-15")
-        increment_counter(self.db, "test_counter", "2023-07-16")
-        increment_counter(self.db, "test_counter", "2023-07-17")
+def test_increment_habit():
+    db = sqlite3.connect(':memory:')
+    cursor = db.cursor()
+    cursor.execute('''CREATE TABLE habits (
+                        id INTEGER PRIMARY KEY,
+                        name TEXT UNIQUE NOT NULL,
+                        description TEXT,
+                        periodicity TEXT NOT NULL,
+                        creation_date TEXT
+                    )''')
+    cursor.execute('''CREATE TABLE counters (
+                        id INTEGER PRIMARY KEY,
+                        habit_id INTEGER,
+                        count INTEGER,
+                        last_increment_date TEXT,
+                        FOREIGN KEY (habit_id) REFERENCES habits (id)
+                    )''')
+    counter = Counter("Exercise", "Daily exercise routine", "Daily")
+    counter.store(db)
+    counter.increment(db)
+    cursor.execute("SELECT count FROM counters WHERE habit_id = ?", (counter.id,))
+    count = cursor.fetchone()
+    assert count[0] == 1
 
-    def test_counter(self):
-        counter = Counter("test_counter_1", "test_description_1", "test_periodicity_1")
-        counter.store(self.db)
-        counter.increment()
-        counter.add_event(self.db)
-        counter.reset(self.db)
-        counter.increment()
-        counter.delete_habit(self.db)
-
-
-    def test_db_counter(self):
-        data = get_counter_data(self.db, "test_counter")
-        assert len(data) == 4
-        count = calculate_count(self.db, "test_counter")
-        assert count == 4
-
-
-# deletes the test database once the test is completed
-    def teardown_method(self):
-        import os
-        self.db.close()
-        os.remove("test.db")
+def test_calculate_longest_streak():
+    db = sqlite3.connect(':memory:')
+    cursor = db.cursor()
+    cursor.execute('''CREATE TABLE habits (
+                        id INTEGER PRIMARY KEY,
+                        name TEXT UNIQUE NOT NULL,
+                        description TEXT,
+                        periodicity TEXT NOT NULL,
+                        creation_date TEXT
+                    )''')
+    cursor.execute('''CREATE TABLE counters (
+                        id INTEGER PRIMARY KEY,
+                        habit_id INTEGER,
+                        count INTEGER,
+                        last_increment_date TEXT,
+                        FOREIGN KEY (habit_id) REFERENCES habits (id)
+                    )''')
+    counter = Counter("Exercise", "Daily exercise routine", "Daily")
+    counter.store(db)
+    for _ in range(5):
+        counter.increment(db)
+    streak = calculate_longest_streak(db, "Exercise")
+    assert streak == 5
