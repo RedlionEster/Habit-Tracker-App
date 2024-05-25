@@ -1,4 +1,4 @@
-from db import get_habits_list, get_counter
+from db import get_habits_list
 
 
 def calculate_longest_streak(db, habit_name):
@@ -11,7 +11,7 @@ def calculate_longest_streak(db, habit_name):
         return streak[0]
     return 0
 
-
+# this function calculates the longest streak from all habits
 def longest_streak_all_habits(db):
     habits = get_habits_list(db)
     longest_streak = 0
@@ -20,7 +20,3 @@ def longest_streak_all_habits(db):
         if streak > longest_streak:
             longest_streak = streak
     return longest_streak
-
-
-def longest_streak_for_habit(db, habit_name):
-    return calculate_longest_streak(db, habit_name)

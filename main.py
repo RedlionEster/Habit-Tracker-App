@@ -1,7 +1,7 @@
 import questionary
 from db import get_db, habit_by_periodicity, get_habits_list, get_counter
 from counter import Counter
-from analyse import longest_streak_all_habits, longest_streak_for_habit
+from analyse import longest_streak_all_habits, calculate_longest_streak
 
 
 def cli():
@@ -13,6 +13,7 @@ def cli():
 
     stop = False
 
+# select what do you want to do
     while not stop:
         choice = questionary.select(
             "What do you want to do?",
@@ -103,7 +104,7 @@ def analyse_habits(db):
         habits = get_habits_list(db)
         name = questionary.select("Select the habit", choices=habits + ["Exit"]).ask()
         if name != "Exit":
-            streak = longest_streak_for_habit(db, name)
+            streak = calculate_longest_streak(db, name)
             print(f"The longest streak for habit '{name}' is {streak}.")
 
     elif analysis_choice == "Exit":
