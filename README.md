@@ -16,7 +16,7 @@ Analyze your participation to see how well you're sticking to your habits.
 ## How to install it?
 
 1. Download the repository from GitHub: https://github.com/RedlionEster/Habit-Tracker-App
-2. Make sure you have Python 3.12+ installed on your computer.
+2. Make sure you have Python 3.11+ installed on your computer.
 3. Run the command to install the required libraries:
 
 
@@ -47,6 +47,7 @@ python preload_db.py
    * Exit: Leave the App.  
 
 ### Creating a New Habit
+
 * Run the application and select "Create a New Habit".
 * Enter the name of your new habit.
 * Enter a description for your habit.
@@ -54,16 +55,19 @@ python preload_db.py
 * The habit will be created and stored in the database.
 
 ### Completing a Task
+
 * Run the application and select "Increment Habit".
 * Select the habit you want to increment.
 * The habit's count will be incremented by 1, and the last increment date will be updated.
 
 ### Resetting a Habit
+
 * Run the application and select "Reset Habit".
 * Select the habit you want to reset.
 * The habit's count will be reset to 0.
 
 ### Analyzing Habits
+
 1. Run the application and select "Analyse Habits".
 2. Choose from the following options:
 
@@ -73,11 +77,13 @@ python preload_db.py
 * Longest streak for a habit: View the longest streak achieved for a specific habit.
 
 ### Deleting a Habit
+
 Run the application and select "Delete Habit".
 Select the habit you want to delete.
 The habit will be removed from the database.
 
 ## Example Habits
+
 The application comes with the following predefined habits for testing purpose:
 
 * Exercise (Daily)
