@@ -29,7 +29,7 @@ def preload_db():
                         FOREIGN KEY (habit_id) REFERENCES habits (id)
                     )''')
 
-    # Predefined habits
+    # Predefined habits with varied streaks
     predefined_habits = [
         {"name": "Exercise", "desc": "Daily exercise routine", "per": "Daily"},
         {"name": "Read", "desc": "Read a book", "per": "Daily"},
@@ -38,15 +38,24 @@ def preload_db():
         {"name": "Grocery Shopping", "desc": "Weekly grocery shopping", "per": "Weekly"}
     ]
 
+    # Predefined streaks per habit
+    streaks = {
+        "Exercise": 14,  # 14-day streak
+        "Read": 10,  # 10-day streak
+        "Meditate": 7,  # 7-day streak
+        "Weekly Review": 3,  # 3-week streak
+        "Grocery Shopping": 4  # 4-week streak
+    }
+
     for habit in predefined_habits:
         counter = Counter(habit['name'], habit['desc'], habit['per'])
         counter.store(db)
 
-        # Simulate completing the habit over time (4 weeks of data)
+        # Simulate completing the habit over time
         if habit['per'] == "Daily":
-            add_habit_completions(db, counter.id, 28, "days")  # 4 weeks of daily completions
+            add_habit_completions(db, counter.id, streaks[habit['name']], "days")
         elif habit['per'] == "Weekly":
-            add_habit_completions(db, counter.id, 4, "weeks")  # 4 weeks of weekly completions
+            add_habit_completions(db, counter.id, streaks[habit['name']], "weeks")
 
     db.commit()
     db.close()
