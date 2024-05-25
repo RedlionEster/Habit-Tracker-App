@@ -7,6 +7,7 @@ from analyse import longest_streak_all_habits, longest_streak_for_habit
 def cli():
     db = get_db()
 
+# greet the user
     while not questionary.confirm("Hi User! Welcome to your Habit Tracking App! Wanna proceed?").ask():
         pass
 
@@ -36,9 +37,11 @@ def cli():
             stop = True
 
 
+# this function creates a new habit
 def create_habit(db):
     name = questionary.text("What's the name of your new habit?").ask()
-    if get_counter(db, name):
+
+    if get_counter(db, name):   # error handling when creating an existing habit
         print("This habit already exists.")
     else:
         desc = questionary.text("How do you wanna describe your habit?").ask()
@@ -48,6 +51,7 @@ def create_habit(db):
         print(f"Habit '{name}' created!")
 
 
+# this function increments a habit by 1
 def increment_habit(db):
     habits = get_habits_list(db)
     name = questionary.select(
@@ -58,6 +62,7 @@ def increment_habit(db):
         print(f"Habit '{name}' incremented!")
 
 
+# this function resets the habit counter to 0
 def reset_habit(db):
     habits = get_habits_list(db)
     name = questionary.select(
@@ -68,6 +73,7 @@ def reset_habit(db):
         print(f"Habit '{name}' reset!")
 
 
+# this function analyses habits
 def analyse_habits(db):
     analysis_choice = questionary.select(
         "What analysis would you like to perform?",
@@ -104,9 +110,11 @@ def analyse_habits(db):
         return
 
 
+# this function deletes a habit
 def delete_habit(db):
     habits = get_habits_list(db)
-    name = questionary.select("What's the name of the habit you want to delete?", choices=habits + ["Exit"]).ask()
+    name = questionary.select(
+        "What's the name of the habit you want to delete?", choices=habits + ["Exit"]).ask()
     if name != "Exit":
         counter = get_counter(db, name)
         counter.delete(db)
