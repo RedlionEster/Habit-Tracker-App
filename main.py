@@ -76,7 +76,6 @@ def analyse_habits(db):
                  "Longest streak of all habits",
                  "Longest streak for a habit", "Exit"]).ask()
 
-
     if analysis_choice == "List all habits":
         habits = get_habits_list(db)
         print("Currently tracked habits:")
@@ -112,6 +111,7 @@ def delete_habit(db):
         counter = get_counter(db, name)
         counter.delete(db)
         print(f"Habit '{name}' deleted!")
+
 
 if __name__ == "__main__":
     cli()
