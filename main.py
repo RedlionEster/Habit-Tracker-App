@@ -3,6 +3,7 @@ from db import get_db, habit_by_periodicity, get_habits_list, get_counter
 from counter import Counter
 from analyse import longest_streak_all_habits, longest_streak_for_habit
 
+
 def cli():
     db = get_db()
 
@@ -14,20 +15,26 @@ def cli():
     while not stop:
         choice = questionary.select(
             "What do you want to do?",
-            choices=["Create", "Increment", "Reset", "Analyse", "Delete", "Exit"]).ask()
+            choices=["Create New Habit",
+                     "Increment Habit",
+                     "Reset Habit",
+                     "Analyse Habit",
+                     "Delete Habit",
+                     "Exit"]).ask()
 
-        if choice == "Create":
+        if choice == "Create New Habit":
             create_habit(db)
-        elif choice == "Increment":
+        elif choice == "Increment Habit":
             increment_habit(db)
-        elif choice == "Reset":
+        elif choice == "Reset Habit":
             reset_habit(db)
-        elif choice == "Analyse":
+        elif choice == "Analyse Habit":
             analyse_habits(db)
-        elif choice == "Delete":
+        elif choice == "Delete Habit":
             delete_habit(db)
         elif choice == "Exit":
             stop = True
+
 
 def create_habit(db):
     name = questionary.text("What's the name of your new habit?").ask()
@@ -40,6 +47,7 @@ def create_habit(db):
         counter.store(db)
         print(f"Habit '{name}' created!")
 
+
 def increment_habit(db):
     habits = get_habits_list(db)
     name = questionary.select(
@@ -49,6 +57,7 @@ def increment_habit(db):
         counter.increment(db)
         print(f"Habit '{name}' incremented!")
 
+
 def reset_habit(db):
     habits = get_habits_list(db)
     name = questionary.select(
@@ -57,6 +66,7 @@ def reset_habit(db):
         counter = get_counter(db, name)
         counter.reset(db)
         print(f"Habit '{name}' reset!")
+
 
 def analyse_habits(db):
     analysis_choice = questionary.select(
@@ -94,6 +104,7 @@ def analyse_habits(db):
     elif analysis_choice == "Exit":
         return
 
+
 def delete_habit(db):
     habits = get_habits_list(db)
     name = questionary.select(
@@ -102,6 +113,7 @@ def delete_habit(db):
         counter = get_counter(db, name)
         counter.delete(db)
         print(f"Habit '{name}' deleted!")
+
 
 if __name__ == "__main__":
     cli()

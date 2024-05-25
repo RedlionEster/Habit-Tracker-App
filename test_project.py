@@ -1,6 +1,5 @@
 import sqlite3
 from counter import Counter
-from db import get_habits_list, get_counter
 from analyse import calculate_longest_streak
 
 def test_create_habit():
