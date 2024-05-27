@@ -1,6 +1,7 @@
 from db import get_habits_list
 
 
+# this function calculates the longest streak for the chosen habit
 def calculate_longest_streak(db, habit_name):
     cursor = db.cursor()
     cursor.execute('''SELECT streak FROM counters 

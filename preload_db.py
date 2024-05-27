@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from counter import Counter
 
 
+# Inserts initial habit and counter data into the database
 def preload_db():
     db = sqlite3.connect('main.db')
     cursor = db.cursor()
@@ -61,6 +62,7 @@ def preload_db():
     db.close()
 
 
+# Adds completion dates for a specified habit to the database
 def add_habit_completions(db, habit_id, num_periods, period_type):
     cursor = db.cursor()
     last_increment_date = datetime.now() - timedelta(**{period_type: num_periods})

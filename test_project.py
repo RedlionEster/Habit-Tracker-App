@@ -3,6 +3,7 @@ from counter import Counter
 from analyse import calculate_longest_streak, longest_streak_all_habits
 
 
+# This function initializes the database and tables
 def setup_database():
     db = sqlite3.connect(':memory:')
     cursor = db.cursor()
@@ -24,6 +25,7 @@ def setup_database():
     return db, cursor
 
 
+# This function is intended to test the creation of a habit
 def test_create_habit():
     db, cursor = setup_database()
     counter = Counter("Test Habit", "This is a test habit", "Daily")
@@ -33,6 +35,7 @@ def test_create_habit():
     assert habit[0] == "Test Habit"
 
 
+# This function is intended to test the incrementation of a habit
 def test_increment_habit():
     db, cursor = setup_database()
     counter = Counter("Exercise", "Daily exercise routine", "Daily")
@@ -43,6 +46,7 @@ def test_increment_habit():
     assert count[0] == 1
 
 
+# This function is intended to test the reset of a habit
 def test_reset_habit():
     db, cursor = setup_database()
     counter = Counter("Exercise", "Daily exercise routine", "Daily")
@@ -54,6 +58,7 @@ def test_reset_habit():
     assert count[0] == 0
 
 
+# This function is intended to test the deletion of a habit
 def test_delete_habit():
     db, cursor = setup_database()
     counter = Counter("Exercise", "Daily exercise routine", "Daily")
@@ -64,6 +69,7 @@ def test_delete_habit():
     assert habit is None
 
 
+# This function is intended to test the calculation of the longest streak for a selected habit
 def test_calculate_longest_streak():
     db, cursor = setup_database()
     counter = Counter("Read", "Read books", "Daily")
@@ -82,6 +88,7 @@ def test_calculate_longest_streak():
     assert streak2 == 1
 
 
+# This function is intended to test the calculation of the longest streak from all habits
 def test_longest_streak_all_habits():
     db, cursor = setup_database()
     habit1 = Counter("Read", "Read books", "Daily")
