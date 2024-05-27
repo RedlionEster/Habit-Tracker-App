@@ -7,7 +7,7 @@ from analyse import longest_streak_all_habits, calculate_longest_streak
 def cli():
     db = get_db()
 
-# greet the user
+# greet the user after running python main.py
     while not questionary.confirm("Hi User! Welcome to your Habit Tracking App! Wanna proceed?").ask():
         pass
 
@@ -74,7 +74,7 @@ def reset_habit(db):
         print(f"Habit '{name}' reset!")
 
 
-# this function analyses habits
+# this function prints the choosen habits analysis (4 options)
 def analyse_habits(db):
     analysis_choice = questionary.select(
         "What analysis would you like to perform?",
