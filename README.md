@@ -106,6 +106,12 @@ Run the test using the following command:
 python pytest .
 ```
 
+Run the more detailed test using the following command:
+
+```shell
+python pytest -v
+```
+
 ## Note:
 
 Note: This is a basic CLI App and can be extended with more features or implemented with a Graphic User Interface.
