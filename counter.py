@@ -9,6 +9,7 @@ class Counter:
         self.periodicity = periodicity
         self.creation_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+    # this function stores the Habit in the database
     def store(self, db):
         cursor = db.cursor()
         cursor.execute('''INSERT INTO habits (name, description, periodicity, creation_date)
@@ -19,6 +20,7 @@ class Counter:
                           VALUES (?, 0, ?, 0)''', (self.id, self.creation_date))
         db.commit()
 
+    # this function increments the Habit's counter and updates the streak
     def increment(self, db):
         cursor = db.cursor()
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -47,6 +49,7 @@ class Counter:
                           WHERE habit_id = ?''', (current_time, streak, self.id))
         db.commit()
 
+    # this function resets the Habit's counter and streak
     def reset(self, db):
         cursor = db.cursor()
         cursor.execute('''UPDATE counters
@@ -54,6 +57,7 @@ class Counter:
                           WHERE habit_id = ?''', (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), self.id))
         db.commit()
 
+    # this function deletes the Habit from the database
     def delete(self, db):
         cursor = db.cursor()
         cursor.execute('''DELETE FROM habits WHERE id = ?''', (self.id,))
