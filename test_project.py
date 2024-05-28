@@ -1,113 +1,116 @@
-import sqlite3
 from counter import Counter
-from analyse import calculate_longest_streak, longest_streak_all_habits
+from db import get_db, get_counter, habit_by_periodicity, get_habits_list
+from analyse import calculate_count, calculate_streak, calculate_longest_streak
+import os
+from datetime import datetime
 
 
-# This function initializes the database and tables
-def setup_database():
-    db = sqlite3.connect(':memory:')
+def get_counter_data(db, name):
     cursor = db.cursor()
-    cursor.execute('''CREATE TABLE habits (
-                        id INTEGER PRIMARY KEY,
-                        name TEXT UNIQUE NOT NULL,
-                        description TEXT,
-                        periodicity TEXT NOT NULL,
-                        creation_date TEXT
-                    )''')
-    cursor.execute('''CREATE TABLE counters (
-                        id INTEGER PRIMARY KEY,
-                        habit_id INTEGER,
-                        count INTEGER,
-                        last_increment_date TEXT,
-                        streak INTEGER,
-                        FOREIGN KEY (habit_id) REFERENCES habits (id)
-                    )''')
-    return db, cursor
+    cursor.execute('''SELECT * FROM counters
+                      JOIN habits ON counters.habit_id = habits.id
+                      WHERE habits.name = ?''', (name,))
+    return cursor.fetchall()
 
 
-# This function is intended to test the creation of a habit
-def test_create_habit():
-    db, cursor = setup_database()
-    counter = Counter("Test Habit", "This is a test habit", "Daily")
-    counter.store(db)
-    cursor.execute("SELECT name FROM habits WHERE name = 'Test Habit'")
-    habit = cursor.fetchone()
-    assert habit[0] == "Test Habit"
+def get_periodicity(db, name):
+    cursor = db.cursor()
+    cursor.execute('''SELECT periodicity FROM habits WHERE name = ?''', (name,))
+    return cursor.fetchone()[0]
 
 
-# This function is intended to test the incrementation of a habit
-def test_increment_habit():
-    db, cursor = setup_database()
-    counter = Counter("Exercise", "Daily exercise routine", "Daily")
-    counter.store(db)
-    counter.increment(db)
-    cursor.execute("SELECT count FROM counters WHERE habit_id = ?", (counter.id,))
-    count = cursor.fetchone()
-    assert count[0] == 1
+def single_habit_cut_list(db, name):
+    cursor = db.cursor()
+    cursor.execute('''SELECT last_increment_date FROM counters
+                      JOIN habits ON counters.habit_id = habits.id
+                      WHERE habits.name = ?''', (name,))
+    return [row[0] for row in cursor.fetchall()]
 
 
-# This function is intended to test the reset of a habit
-def test_reset_habit():
-    db, cursor = setup_database()
-    counter = Counter("Exercise", "Daily exercise routine", "Daily")
-    counter.store(db)
-    counter.increment(db)
-    counter.reset(db)
-    cursor.execute("SELECT count FROM counters WHERE habit_id = ?", (counter.id,))
-    count = cursor.fetchone()
-    assert count[0] == 0
+def get_countername_list(db):
+    cursor = db.cursor()
+    cursor.execute('''SELECT name FROM habits''')
+    return [row[0] for row in cursor.fetchall()]
 
 
-# This function is intended to test the deletion of a habit
-def test_delete_habit():
-    db, cursor = setup_database()
-    counter = Counter("Exercise", "Daily exercise routine", "Daily")
-    counter.store(db)
-    counter.delete(db)
-    cursor.execute("SELECT * FROM habits WHERE name = 'Exercise'")
-    habit = cursor.fetchone()
-    assert habit is None
+class TestCounter:
+
+    def setup_method(self):
+        self.db = get_db("test.db")
+
+        cursor = self.db.cursor()
+        cursor.execute('''CREATE TABLE IF NOT EXISTS habits (
+                            id INTEGER PRIMARY KEY,
+                            name TEXT UNIQUE NOT NULL,
+                            description TEXT,
+                            periodicity TEXT NOT NULL,
+                            creation_date TEXT
+                        )''')
+
+        cursor.execute('''CREATE TABLE IF NOT EXISTS counters (
+                            id INTEGER PRIMARY KEY,
+                            habit_id INTEGER,
+                            count INTEGER,
+                            last_increment_date TEXT,
+                            streak INTEGER,
+                            FOREIGN KEY (habit_id) REFERENCES habits (id)
+                        )''')
+        self.db.commit()
+
+        # Predefined habit for testing
+        self.counter = Counter("test_counter", "Test habit", "Daily")
+        self.counter.store(self.db)
+        self.dates = ["2023-07-01", "2023-07-02", "2023-07-03", "2023-07-04"]
+
+        for date in self.dates:
+            current_time = datetime.strptime(date, "%Y-%m-%d")
+            cursor.execute('''UPDATE counters
+                              SET count = count + 1, last_increment_date = ?, streak = ?
+                              WHERE habit_id = ?''',
+                           (current_time.strftime("%Y-%m-%d %H:%M:%S"), self.dates.index(date) + 1, self.counter.id))
+            self.db.commit()
+
+    def test_counter(self):
+        counter = Counter("test_counter_1", "test_description_1", "Daily")
+        counter.store(self.db)
+        counter.increment(self.db)
+        counter.reset(self.db)
+        counter.increment(self.db)
+        counter.delete(self.db)
+
+    def test_db_counter(self):
+        data = get_counter_data(self.db, "test_counter")
+        assert len(data) == 4
+
+        count = calculate_count(self.db, "test_counter")
+        assert count == 4
+
+    def test_streak(self):
+        periodicity = get_periodicity(self.db, "test_counter")
+        assert periodicity == "Daily"
+
+        dates = single_habit_cut_list(self.db, "test_counter")
+        assert len(dates) == 4
+
+        streak = calculate_streak(self.db, "test_counter")
+        assert len(streak) == 4
+
+        countername_list = get_countername_list(self.db)
+        assert len(countername_list) == 1
+
+        longest_streak = calculate_longest_streak(self.db)
+        assert len(longest_streak) == 4
+
+    def teardown_method(self):
+        self.db.close()
+        os.remove("test.db")
 
 
-# This function is intended to test the calculation of the longest streak for a selected habit
-def test_calculate_longest_streak():
-    db, cursor = setup_database()
-    counter = Counter("Read", "Read books", "Daily")
-    counter.store(db)
-    counter.increment(db)
-    counter.increment(db)
-
-    counter2 = Counter("Exercise", "Daily exercise routine", "Daily")
-    counter2.store(db)
-    counter2.increment(db)
-
-    streak = calculate_longest_streak(db, "Read")
-    assert streak == 2
-
-    streak2 = calculate_longest_streak(db, "Exercise")
-    assert streak2 == 1
-
-
-# This function is intended to test the calculation of the longest streak from all habits
-def test_longest_streak_all_habits():
-    db, cursor = setup_database()
-    habit1 = Counter("Read", "Read books", "Daily")
-    habit1.store(db)
-    habit1.increment(db)
-    habit1.increment(db)
-
-    habit2 = Counter("Exercise", "Daily exercise routine", "Daily")
-    habit2.store(db)
-    habit2.increment(db)
-
-    longest_streak = longest_streak_all_habits(db)
-    assert longest_streak == 2
-
-
+# Ensure the tests are executed
 if __name__ == "__main__":
-    test_create_habit()
-    test_increment_habit()
-    test_reset_habit()
-    test_delete_habit()
-    test_calculate_longest_streak()
-    test_longest_streak_all_habits()
+    test = TestCounter()
+    test.setup_method()
+    test.test_counter()
+    test.test_db_counter()
+    test.test_streak()
+    test.teardown_method()

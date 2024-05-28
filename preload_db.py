@@ -1,19 +1,13 @@
-import sqlite3
-from datetime import datetime, timedelta
+from db import get_db
 from counter import Counter
+from datetime import datetime, timedelta
 
-
-# Inserts initial habit and counter data into the database
 def preload_db():
-    db = sqlite3.connect('main.db')
+    db = get_db()
     cursor = db.cursor()
 
-    # Drop tables if they exist
-    cursor.execute("DROP TABLE IF EXISTS habits")
-    cursor.execute("DROP TABLE IF EXISTS counters")
-
-    # Create tables
-    cursor.execute('''CREATE TABLE habits (
+    # Create tables if they do not exist
+    cursor.execute('''CREATE TABLE IF NOT EXISTS habits (
                         id INTEGER PRIMARY KEY,
                         name TEXT UNIQUE NOT NULL,
                         description TEXT,
@@ -21,7 +15,7 @@ def preload_db():
                         creation_date TEXT
                     )''')
 
-    cursor.execute('''CREATE TABLE counters (
+    cursor.execute('''CREATE TABLE IF NOT EXISTS counters (
                         id INTEGER PRIMARY KEY,
                         habit_id INTEGER,
                         count INTEGER,
@@ -29,50 +23,39 @@ def preload_db():
                         streak INTEGER,
                         FOREIGN KEY (habit_id) REFERENCES habits (id)
                     )''')
+    db.commit()
 
-    # Predefined habits with varied streaks
-    predefined_habits = [
-        {"name": "Exercise", "desc": "Daily exercise routine", "per": "Daily"},
-        {"name": "Read", "desc": "Read a book", "per": "Daily"},
-        {"name": "Meditate", "desc": "Daily meditation", "per": "Daily"},
-        {"name": "Weekly Review", "desc": "Review weekly goals", "per": "Weekly"},
-        {"name": "Grocery Shopping", "desc": "Weekly grocery shopping", "per": "Weekly"}
-    ]
-
-    # Predefined streaks per habit
-    streaks = {
-        "Exercise": 14,  # 14-day streak
-        "Read": 10,  # 10-day streak
-        "Meditate": 7,  # 7-day streak
-        "Weekly Review": 3,  # 3-week streak
-        "Grocery Shopping": 4  # 4-week streak
+    # Predefined habits and their respective dates
+    habits = {
+        "study": ["2023-07-01", "2023-07-02", "2023-07-03", "2023-07-04", "2023-07-05", "2023-07-06", "2023-07-07",
+                  "2023-07-08", "2023-07-09", "2023-07-10", "2023-07-11", "2023-07-12", "2023-07-13", "2023-07-14",
+                  "2023-07-15", "2023-07-16", "2023-07-17", "2023-07-18", "2023-07-19", "2023-07-20", "2023-07-21",
+                  "2023-07-22", "2023-07-23", "2023-07-24", "2023-07-25", "2023-07-26", "2023-07-27", "2023-07-28",
+                  "2023-07-29", "2023-07-30", "2023-07-31"],
+        "read": ["2023-07-01", "2023-07-02", "2023-07-03", "2023-07-05", "2023-07-06", "2023-07-07", "2023-07-08",
+                 "2023-07-09", "2023-07-10", "2023-07-11", "2023-07-12", "2023-07-14", "2023-07-15", "2023-07-16",
+                 "2023-07-17", "2023-07-18", "2023-07-19", "2023-07-20", "2023-07-21", "2023-07-22", "2023-07-23",
+                 "2023-07-25", "2023-07-26", "2023-07-27", "2023-07-28", "2023-07-29", "2023-07-30", "2023-07-31"],
+        "gaming": ["2023-07-01", "2023-07-02", "2023-07-03", "2023-07-05", "2023-07-06", "2023-07-21", "2023-07-24", "2023-07-30"],
+        "sport": ["2023-07-01", "2023-07-09", "2023-07-16", "2023-07-23", "2023-07-30"],
+        "laundry": ["2023-07-01", "2023-07-31"]
     }
 
-    for habit in predefined_habits:
-        counter = Counter(habit['name'], habit['desc'], habit['per'])
-        counter.store(db)
+    for habit, dates in habits.items():
+        cursor.execute('SELECT id FROM habits WHERE name = ?', (habit,))
+        habit_id = cursor.fetchone()
+        if not habit_id:
+            counter = Counter(habit, f"{habit} habit", "Daily" if habit != "laundry" else "Weekly")
+            counter.store(db)
+            cursor.execute('SELECT id FROM habits WHERE name = ?', (habit,))
+            habit_id = cursor.fetchone()[0]
+        else:
+            habit_id = habit_id[0]
 
-        # Simulate completing the habit over time
-        if habit['per'] == "Daily":
-            add_habit_completions(db, counter.id, streaks[habit['name']], "days")
-        elif habit['per'] == "Weekly":
-            add_habit_completions(db, counter.id, streaks[habit['name']], "weeks")
+        for date in dates:
+            current_time = datetime.strptime(date, "%Y-%m-%d")
+            cursor.execute('''INSERT INTO counters (habit_id, count, last_increment_date, streak)
+                              VALUES (?, ?, ?, ?)''', (habit_id, 1, current_time.strftime("%Y-%m-%d %H:%M:%S"), 1))
+            db.commit()
 
-    db.commit()
-    db.close()
-
-
-# Adds completion dates for a specified habit to the database
-def add_habit_completions(db, habit_id, num_periods, period_type):
-    cursor = db.cursor()
-    last_increment_date = datetime.now() - timedelta(**{period_type: num_periods})
-    for _ in range(num_periods):
-        last_increment_date += timedelta(**{period_type: 1})
-        cursor.execute('''UPDATE counters
-                          SET count = count + 1, last_increment_date = ?, streak = streak + 1
-                          WHERE habit_id = ?''', (last_increment_date.strftime("%Y-%m-%d %H:%M:%S"), habit_id))
-    db.commit()
-
-
-if __name__ == "__main__":
-    preload_db()
+preload_db()
