@@ -1,6 +1,6 @@
 from db import get_db
 from counter import Counter
-from datetime import datetime, timedelta
+from datetime import datetime
 
 def preload_db():
     db = get_db()
@@ -59,4 +59,6 @@ def preload_db():
                               VALUES (?, ?, ?, ?)''', (habit_id, 1, current_time.strftime("%Y-%m-%d %H:%M:%S"), 1))
             db.commit()
 
+
 preload_db()
+
