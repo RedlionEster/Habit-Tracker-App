@@ -17,6 +17,7 @@ def create_tables(db):
                         count INTEGER,
                         last_increment_date TEXT,
                         streak INTEGER,
+                        longest_streak INTEGER DEFAULT 0,
                         FOREIGN KEY (habit_id) REFERENCES habits (id) ON DELETE CASCADE
                     )''')
     db.commit()
@@ -77,8 +78,8 @@ def preload_db():
         habit_id = cursor.lastrowid
 
         for increment_date in habit['increments']:
-            cursor.execute('''INSERT INTO counters (habit_id, count, last_increment_date, streak)
-                              VALUES (?, 1, ?, 1)''', (habit_id, increment_date + " 00:00:00"))
+            cursor.execute('''INSERT INTO counters (habit_id, count, last_increment_date, streak, longest_streak)
+                              VALUES (?, 1, ?, 1, 1)''', (habit_id, increment_date + " 00:00:00"))
 
     db.commit()
     db.close()
