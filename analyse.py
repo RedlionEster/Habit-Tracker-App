@@ -1,5 +1,5 @@
 from db import get_habits_list
-from datetime import datetime
+
 
 def calculate_longest_streak(db, habit_name):
     cursor = db.cursor()
@@ -13,6 +13,7 @@ def calculate_longest_streak(db, habit_name):
 
     return result[0]
 
+
 def longest_streak_all_habits(db):
     habits = get_habits_list(db)
     longest_streak = 0
@@ -22,11 +23,13 @@ def longest_streak_all_habits(db):
             longest_streak = streak
     return longest_streak
 
+
 def list_all_habits(db):
     cursor = db.cursor()
     cursor.execute('''SELECT name, description, periodicity, creation_date FROM habits''')
     habits = cursor.fetchall()
     return habits
+
 
 def list_habits_by_periodicity(db, periodicity):
     cursor = db.cursor()

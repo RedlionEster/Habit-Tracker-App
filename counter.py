@@ -1,9 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import datetime
+
 
 class Counter:
     """
     A class to represent a habit and its associated data.
-
     Attributes:
     id : int
         Unique identifier for the habit.
@@ -16,6 +16,7 @@ class Counter:
     creation_date : str
         The date and time when the habit was created.
     """
+
 
     def __init__(self, name, description, periodicity, id=None):
         """
@@ -38,6 +39,7 @@ class Counter:
         self.periodicity = periodicity
         self.creation_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+
     def store(self, db):
         cursor = db.cursor()
         cursor.execute('''INSERT INTO habits (name, description, periodicity, creation_date)
@@ -47,6 +49,7 @@ class Counter:
         cursor.execute('''INSERT INTO counters (habit_id, count, last_increment_date, streak, longest_streak)
                           VALUES (?, 0, ?, 0, 0)''', (self.id, self.creation_date))
         db.commit()
+
 
     def increment(self, db):
         cursor = db.cursor()
@@ -82,12 +85,14 @@ class Counter:
         db.commit()
         print(f"Habit '{self.name}' incremented. New streak: {streak}, Longest streak: {longest_streak}, Last increment date: {current_time}")
 
+
     def reset(self, db):
         cursor = db.cursor()
         cursor.execute('''UPDATE counters
                           SET count = 0, last_increment_date = ?, streak = 0, longest_streak = 0
                           WHERE habit_id = ?''', (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), self.id))
         db.commit()
+
 
     def delete(self, db):
         cursor = db.cursor()

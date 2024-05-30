@@ -74,7 +74,7 @@ def reset_habit(db):
         print(f"Habit '{name}' reset!")
 
 
-# this function prints the choosen habits analysis (4 options)
+# this function prints the chosen habits analysis (4 options)
 def analyse_habits(db):
     analysis_choice = questionary.select(
         "What analysis would you like to perform?",
