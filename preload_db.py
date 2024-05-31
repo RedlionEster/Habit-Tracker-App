@@ -18,9 +18,7 @@ def preload_db():
     cursor.execute('''CREATE TABLE IF NOT EXISTS counters (
                         id INTEGER PRIMARY KEY,
                         habit_id INTEGER,
-                        count INTEGER,
-                        last_increment_date TEXT,
-                        streak INTEGER,
+                        increment_date TEXT,
                         FOREIGN KEY (habit_id) REFERENCES habits (id)
                     )''')
     db.commit()
@@ -55,8 +53,8 @@ def preload_db():
 
         for date in dates:
             current_time = datetime.strptime(date, "%Y-%m-%d")
-            cursor.execute('''INSERT INTO counters (habit_id, count, last_increment_date, streak)
-                              VALUES (?, ?, ?, ?)''', (habit_id, 1, current_time.strftime("%Y-%m-%d %H:%M:%S"), 1))
+            cursor.execute('''INSERT INTO counters (habit_id, increment_date)
+                              VALUES (?, ?)''', (habit_id, current_time.strftime("%Y-%m-%d %H:%M:%S")))
             db.commit()
 
 preload_db()
