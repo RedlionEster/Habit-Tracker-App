@@ -4,6 +4,7 @@ from counter import Counter
 from analyse import calculate_longest_streak, longest_streak_all_habits
 from db import get_habits_list, habit_by_periodicity, get_counter
 
+
 def setup_database():
     db = sqlite3.connect(':memory:')
     cursor = db.cursor()

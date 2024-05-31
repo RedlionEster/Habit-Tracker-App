@@ -3,11 +3,6 @@ from datetime import datetime
 
 
 # This function calculates the longest streak for the chosen habit
-from db import get_habits_list
-from datetime import datetime
-
-from datetime import datetime, timedelta
-
 def calculate_longest_streak(db, habit_name):
     cursor = db.cursor()
     cursor.execute('''SELECT increment_date FROM counters
