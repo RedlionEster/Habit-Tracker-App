@@ -1,6 +1,7 @@
 from db import get_habits_list
 from datetime import datetime
 
+
 # this function calculates the longest streak for the chosen habit
 def calculate_longest_streak(db, habit_name):
     cursor = db.cursor()
@@ -10,14 +11,14 @@ def calculate_longest_streak(db, habit_name):
                       ORDER BY last_increment_date ASC''', (habit_name,))
     rows = cursor.fetchall()
 
-    # print(f"Fetched rows for habit '{habit_name}': {rows}")
+    #print(f"Fetched rows for habit '{habit_name}': {rows}")
 
     if not rows:
         return 0
 
     # Parse dates from the database
     dates = [datetime.strptime(row[0], "%Y-%m-%d %H:%M:%S") for row in rows]
-    # print(f"Parsed dates for habit '{habit_name}': {dates}")
+    #print(f"Parsed dates for habit '{habit_name}': {dates}")
 
     # Initialize streak variables
     longest_streak = 1
@@ -36,7 +37,7 @@ def calculate_longest_streak(db, habit_name):
 
     # Final check at the end of the loop
     longest_streak = max(longest_streak, current_streak)
-    # print(f"Final longest streak: {longest_streak}")
+    #print(f"Final longest streak: {longest_streak}")
 
     return longest_streak
 
