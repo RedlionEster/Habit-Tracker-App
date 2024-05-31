@@ -4,16 +4,17 @@ from counter import Counter
 from analyse import longest_streak_all_habits, calculate_longest_streak
 
 
+# Main function that runs the CLI, providing options for the user to manage their habits
 def cli():
     db = get_db()
 
-# greet the user after running python main.py
+# Greet the user after running python main.py
     while not questionary.confirm("Hi User! Welcome to your Habit Tracking App! Wanna proceed?").ask():
         pass
 
     stop = False
 
-# select what do you want to do
+# Select what do you want to do
     while not stop:
         choice = questionary.select(
             "What do you want to do?",
@@ -38,7 +39,7 @@ def cli():
             stop = True
 
 
-# this function guides you through the new habit creation
+# Guides the user through the process of creating a new habit
 def create_habit(db):
     name = questionary.text("What's the name of your new habit?").ask()
 
@@ -52,7 +53,7 @@ def create_habit(db):
         print(f"Habit '{name}' created!")
 
 
-# this function guides you through habit incrementation
+# Guides the user through incrementing a habit's counter
 def increment_habit(db):
     habits = get_habits_list(db)
     name = questionary.select(
@@ -63,7 +64,7 @@ def increment_habit(db):
         print(f"Habit '{name}' incremented!")
 
 
-# this function guides you through habit counter reset
+# Guides the user through resetting a habit's counter and streak
 def reset_habit(db):
     habits = get_habits_list(db)
     name = questionary.select(
@@ -74,7 +75,7 @@ def reset_habit(db):
         print(f"Habit '{name}' reset!")
 
 
-# this function guides you through the options for analysing your habits
+# Guides the user through analyzing their habits
 def analyse_habits(db):
     analysis_choice = questionary.select(
         "What analysis would you like to perform?",
@@ -111,7 +112,7 @@ def analyse_habits(db):
         return
 
 
-# this function guides you through deleting a habit
+# Guides the user through deleting a habit
 def delete_habit(db):
     habits = get_habits_list(db)
     name = questionary.select(
