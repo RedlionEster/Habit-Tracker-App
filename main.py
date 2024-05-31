@@ -38,7 +38,7 @@ def cli():
             stop = True
 
 
-# this function creates a new habit
+# this function guides you through the new habit creation
 def create_habit(db):
     name = questionary.text("What's the name of your new habit?").ask()
 
@@ -52,7 +52,7 @@ def create_habit(db):
         print(f"Habit '{name}' created!")
 
 
-# this function increments a habit by 1
+# this function guides you through habit incrementation
 def increment_habit(db):
     habits = get_habits_list(db)
     name = questionary.select(
@@ -63,7 +63,7 @@ def increment_habit(db):
         print(f"Habit '{name}' incremented!")
 
 
-# this function resets the habit counter to 0
+# this function guides you through habit counter reset
 def reset_habit(db):
     habits = get_habits_list(db)
     name = questionary.select(
@@ -74,7 +74,7 @@ def reset_habit(db):
         print(f"Habit '{name}' reset!")
 
 
-# this function prints the choosen habits analysis (4 options)
+# this function guides you through the options for analysing your habits
 def analyse_habits(db):
     analysis_choice = questionary.select(
         "What analysis would you like to perform?",
@@ -111,7 +111,7 @@ def analyse_habits(db):
         return
 
 
-# this function deletes a habit
+# this function guides you through deleting a habit
 def delete_habit(db):
     habits = get_habits_list(db)
     name = questionary.select(
