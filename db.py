@@ -2,7 +2,7 @@ import sqlite3
 from counter import Counter
 
 
-# connects to the database "main.db" and returns the connection object
+# Connects to the database "main.db" and returns the connection object
 def get_db():
     """
     connects to the database and returns the connection object
@@ -11,7 +11,7 @@ def get_db():
     return sqlite3.connect('main.db')
 
 
-# list of all habits stored in the database
+# List of all habits stored in the database
 def get_habits_list(db):
     """
     fetches the names of all habits from the database
@@ -23,7 +23,7 @@ def get_habits_list(db):
     return [row[0] for row in cursor.fetchall()]
 
 
-# returns the list of habits by periodicity (daily or weekly)
+# Returns the list of habits by periodicity (choose: daily or weekly)
 def habit_by_periodicity(db, periodicity):
     """
     fetches the names of habits from the database based on the given periodicity
@@ -36,7 +36,7 @@ def habit_by_periodicity(db, periodicity):
     return [row[0] for row in cursor.fetchall()]
 
 
-# retrieves a specific habit from the table by it's name and returns it with data
+# Retrieves a specific habit from the table by it's name and returns it with data
 def get_counter(db, name):
     """
     select a habit and return a Counter object with habit's data

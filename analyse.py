@@ -2,7 +2,7 @@ from db import get_habits_list
 from datetime import datetime
 
 
-# this function calculates the longest streak for the chosen habit
+# This function calculates the longest streak for the chosen habit
 def calculate_longest_streak(db, habit_name):
     cursor = db.cursor()
     cursor.execute('''SELECT DISTINCT last_increment_date FROM counters
@@ -42,7 +42,7 @@ def calculate_longest_streak(db, habit_name):
     return longest_streak
 
 
-# this function calculates the longest streak from all habits
+# This function calculates the longest streak from all habits
 def longest_streak_all_habits(db):
     habits = get_habits_list(db)
     longest_streak = 0
