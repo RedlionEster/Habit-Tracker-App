@@ -23,6 +23,7 @@ def setup_database():
                     )''')
     return db
 
+
 def test_create_habit():
     db = setup_database()
     counter = Counter("Test Habit", "This is a test habit", "Daily")
