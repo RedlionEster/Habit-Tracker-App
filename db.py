@@ -11,6 +11,18 @@ def get_db():
     return sqlite3.connect('main.db')
 
 
+# list of all habits stored in the database
+def get_habits_list(db):
+    """
+    fetches the names of all habits from the database
+    :param db: sqlite3 database
+    :return: list of all habits
+    """
+    cursor = db.cursor()
+    cursor.execute("SELECT name FROM habits")
+    return [row[0] for row in cursor.fetchall()]
+
+
 # returns the list of habits by periodicity (daily or weekly)
 def habit_by_periodicity(db, periodicity):
     """
@@ -21,18 +33,6 @@ def habit_by_periodicity(db, periodicity):
     """
     cursor = db.cursor()
     cursor.execute("SELECT name FROM habits WHERE periodicity = ?", (periodicity,))
-    return [row[0] for row in cursor.fetchall()]
-
-
-# list of all habits stored in the database
-def get_habits_list(db):
-    """
-    fetches the names of all habits from the database
-    :param db: sqlite3 database
-    :return: list of all habits
-    """
-    cursor = db.cursor()
-    cursor.execute("SELECT name FROM habits")
     return [row[0] for row in cursor.fetchall()]
 
 
