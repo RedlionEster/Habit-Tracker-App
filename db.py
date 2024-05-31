@@ -1,7 +1,16 @@
 import sqlite3
-from counter import Counter  # Add this import
+from counter import Counter
+
 
 def get_db():
+    """
+        Initialize and return the database connection.
+
+        Returns:
+        -------
+        sqlite3.Connection
+            The database connection.
+        """
     db = sqlite3.connect('main.db')
     cursor = db.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS habits (
@@ -20,18 +29,24 @@ def get_db():
     db.commit()
     return db
 
+
+# Retrieve a list of all habit names from the database
 def get_habits_list(db):
     cursor = db.cursor()
     cursor.execute('SELECT name FROM habits')
     rows = cursor.fetchall()
     return [row[0] for row in rows]
 
+
+# Retrieve a list of habit names filtered by their periodicity
 def habit_by_periodicity(db, periodicity):
     cursor = db.cursor()
     cursor.execute('SELECT name FROM habits WHERE periodicity = ?', (periodicity,))
     rows = cursor.fetchall()
     return [row[0] for row in rows]
 
+
+# Retrieve a Counter object for a given habit name
 def get_counter(db, name):
     cursor = db.cursor()
     cursor.execute('SELECT * FROM habits WHERE name = ?', (name,))

@@ -4,6 +4,21 @@ from datetime import datetime
 
 # This function calculates the longest streak for the chosen habit
 def calculate_longest_streak(db, habit_name):
+    """
+        Calculate the longest streak of a habit.
+
+        Parameters:
+        ----------
+        db : sqlite3.Connection
+            The database connection.
+        habit_name : str
+            The name of the habit to calculate the streak for.
+
+        Returns:
+        -------
+        int
+            The longest streak of the habit.
+        """
     cursor = db.cursor()
     cursor.execute('''SELECT increment_date FROM counters
                       INNER JOIN habits ON counters.habit_id = habits.id 
@@ -33,6 +48,19 @@ def calculate_longest_streak(db, habit_name):
 
 # This function calculates the longest streak from all habits
 def longest_streak_all_habits(db):
+    """
+        Calculate the longest streak for all habits in the database.
+
+        Parameters:
+        ----------
+        db : sqlite3.Connection
+            The database connection.
+
+        Returns:
+        -------
+        int
+            The longest streak among all habits.
+        """
     habits = get_habits_list(db)
     longest_streak = 0
     for habit in habits:
