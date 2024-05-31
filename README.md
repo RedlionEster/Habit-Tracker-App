@@ -27,7 +27,7 @@ pip install -r requirements.txt
 
 ## Load the database:
 
-To load the Database with 4 weeks of data for testing purposes, run:
+To load the Database with 1 month of data for testing purposes, run:
 
 ```shell
 python preload_db.py
@@ -86,13 +86,12 @@ The habit will be removed from the database.
 
 The application comes with the following predefined habits for testing purpose:
 
-* Exercise (Daily)
-* Read (Daily)
-* Meditate (Daily)
-* Weekly Review (Weekly)
-* Grocery Shopping (Weekly)
+* study (Daily)
+* read (Daily)
+* gaming (Daily)
+* sport (Daily)
+* laundry (Weekly)
 
-Each habit has example tracking data for a period of 4 weeks.
 
 ## Tests:
 

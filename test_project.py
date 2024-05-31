@@ -33,6 +33,7 @@ def test_create_habit():
     assert habit is not None
     assert habit[0] == "Test Habit"
 
+
 def test_increment_habit():
     db = setup_database()
     counter = Counter("Exercise", "Daily exercise routine", "Daily")
@@ -42,6 +43,7 @@ def test_increment_habit():
     cursor.execute("SELECT COUNT(*) FROM counters WHERE habit_id = ?", (counter.id,))
     count = cursor.fetchone()[0]
     assert count == 1
+
 
 def test_reset_habit():
     db = setup_database()
@@ -54,6 +56,7 @@ def test_reset_habit():
     count = cursor.fetchone()[0]
     assert count == 0
 
+
 def test_delete_habit():
     db = setup_database()
     counter = Counter("Exercise", "Daily exercise routine", "Daily")
@@ -63,6 +66,7 @@ def test_delete_habit():
     cursor.execute("SELECT * FROM habits WHERE name = 'Exercise'")
     habit = cursor.fetchone()
     assert habit is None
+
 
 def test_calculate_longest_streak():
     db = setup_database()
@@ -100,6 +104,7 @@ def test_calculate_longest_streak():
     print(f"Calculated streak for 'Exercise': {streak2}")
     assert streak2 == 1
 
+
 def test_longest_streak_all_habits():
     db = setup_database()
     habit1 = Counter("Read", "Read books", "Daily")
@@ -122,12 +127,14 @@ def test_longest_streak_all_habits():
     longest_streak = longest_streak_all_habits(db)
     assert longest_streak == 2
 
+
 def test_get_habits_list():
     db = setup_database()
     counter = Counter("Test Habit", "This is a test habit", "Daily")
     counter.store(db)
     habits = get_habits_list(db)
     assert "Test Habit" in habits
+
 
 def test_habit_by_periodicity():
     db = setup_database()
@@ -140,6 +147,7 @@ def test_habit_by_periodicity():
     assert "Daily Habit" in daily_habits
     assert "Weekly Habit" in weekly_habits
 
+
 def test_get_counter():
     db = setup_database()
     counter = Counter("Test Habit", "This is a test habit", "Daily")
@@ -147,6 +155,7 @@ def test_get_counter():
     fetched_counter = get_counter(db, "Test Habit")
     assert fetched_counter is not None
     assert fetched_counter.name == "Test Habit"
+
 
 if __name__ == "__main__":
     test_create_habit()
