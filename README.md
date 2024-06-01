@@ -39,7 +39,7 @@ python preload_db.py
 
 2. Use the arrow keys on your keyboard to choose from the following options:
       
-   * Create a New Habit: Add a new habit to track.  
+   * Create a New Habit: Add a new habit to track (the count will start on 0).  
    * Increment Habit: Mark your habit as completed for the current period.  
    * Reset Habit: Reset the progress of an existing habit.  
    * Analyse Habits: Review your habit tracking data.  

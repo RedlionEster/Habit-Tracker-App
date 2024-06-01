@@ -61,4 +61,5 @@ def preload_db():
                               VALUES (?, ?)''', (habit_id, current_time.strftime("%Y-%m-%d %H:%M:%S")))
             db.commit()
 
+
 preload_db()

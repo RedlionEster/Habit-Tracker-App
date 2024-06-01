@@ -26,13 +26,13 @@ def calculate_longest_streak(db, habit_name):
                       ORDER BY increment_date ASC''', (habit_name,))
     rows = cursor.fetchall()
 
-    #print(f"Fetched rows for habit '{habit_name}': {rows}")
+    # print(f"Fetched rows for habit '{habit_name}': {rows}")
 
     if not rows:
         return 0
 
     dates = [datetime.strptime(row[0], "%Y-%m-%d %H:%M:%S") for row in rows]
-    #print(f"Parsed dates for habit '{habit_name}': {dates}")
+    # print(f"Parsed dates for habit '{habit_name}': {dates}")
 
     longest_streak = 1
     current_streak = 1
@@ -40,14 +40,14 @@ def calculate_longest_streak(db, habit_name):
     for i in range(1, len(dates)):
         if (dates[i] - dates[i - 1]).days == 1:
             current_streak += 1
-            #print(f"Current streak incremented: {current_streak}")
+            # print(f"Current streak incremented: {current_streak}")
         else:
             longest_streak = max(longest_streak, current_streak)
-            #print(f"New longest streak found: {longest_streak}")
+            # print(f"New longest streak found: {longest_streak}")
             current_streak = 1
 
     longest_streak = max(longest_streak, current_streak)
-    #print(f"Final longest streak: {longest_streak}")
+    # print(f"Final longest streak: {longest_streak}")
     return longest_streak
 
 

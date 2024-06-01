@@ -1,7 +1,7 @@
 from datetime import datetime
 
-class Counter:
 
+class Counter:
 
     """
     A class to represent a habit with a counter for tracking increments over time.
@@ -31,7 +31,6 @@ class Counter:
         Deletes the habit and its counters from the database.
     """
 
-
     def __init__(self, name, description, periodicity, id=None):
         """
         Constructs all the necessary attributes for the Counter object.
@@ -53,7 +52,6 @@ class Counter:
         self.periodicity = periodicity
         self.creation_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-
     def store(self, db):
         """
         Stores the habit in the database.
@@ -68,7 +66,6 @@ class Counter:
                           VALUES (?, ?, ?, ?)''', (self.name, self.description, self.periodicity, self.creation_date))
         db.commit()
         self.id = cursor.lastrowid
-
 
     def increment(self, db, increment_date=None):
         """
@@ -91,7 +88,6 @@ class Counter:
                           VALUES (?, ?)''', (self.id, current_time))
         db.commit()
 
-
     def reset(self, db):
         """
         Resets the counter for the habit by deleting all related entries in the counters table.
@@ -104,7 +100,6 @@ class Counter:
         cursor = db.cursor()
         cursor.execute('''DELETE FROM counters WHERE habit_id = ?''', (self.id,))
         db.commit()
-
 
     def delete(self, db):
         """
